@@ -1,0 +1,304 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CoachSearch</name>
+    </assembly>
+    <members>
+        <member name="M:CoachSearch.Controllers.AuthController.Register(CoachSearch.Models.Dto.RegistrationRequestDto)">
+            <summary>
+            Register a user
+            </summary>
+            <param name="registrationRequestDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CoachSearch.Controllers.AuthController.Login(CoachSearch.Models.Dto.LoginRequestDto)">
+            <summary>
+            Login by email and password
+            </summary>
+            <param name="loginRequestDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CoachSearch.Controllers.AuthController.ChangePassword(CoachSearch.Models.Dto.ChangePasswordRequestDto)">
+            <summary>
+             Change a password of user
+            </summary>
+            <param name="body"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CoachSearch.Controllers.CustomerController.GetCustomerProfile">
+            <summary>
+            Get a customer profile
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CoachSearch.Controllers.CustomerController.UpdateTrainerProfile(CoachSearch.Models.Dto.ProfileDto.CustomerProfileRequestDto)">
+            <summary>
+            Update a customer profile
+            </summary>
+            <param name="body"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CoachSearch.Controllers.ReviewController.AddReview(CoachSearch.Models.Dto.Review.AddReviewRequestDto)">
+            <summary>
+            Add review to a trainer
+            </summary>
+            <param name="body"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CoachSearch.Controllers.TrainerController.GetTrainers(System.String)">
+            <summary>
+            Get all trainers info
+            </summary>
+            <param name="city">City of the trainer</param>
+            <returns></returns>
+        </member>
+        <member name="M:CoachSearch.Controllers.TrainerController.GetTrainerById(System.Int64)">
+            <summary>
+            Get a trainer info by id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CoachSearch.Controllers.TrainerController.GetTrainerProfile">
+            <summary>
+            Get a trainer profile
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CoachSearch.Controllers.TrainerController.UpdateTrainerProfile(CoachSearch.Models.Dto.TrainerProfileRequestDto)">
+            <summary>
+            Update a trainer profile
+            </summary>
+            <param name="body"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CoachSearch.Migrations.Initial">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.ChangeFkCustomers">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeFkCustomers.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeFkCustomers.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeFkCustomers.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.AddLazyLoading">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddLazyLoading.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddLazyLoading.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddLazyLoading.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.AddTrainerTable">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddTrainerTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddTrainerTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddTrainerTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.AddTrainerTableToDb">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddTrainerTableToDb.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddTrainerTableToDb.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddTrainerTableToDb.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.ChangeTrainerTables">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeTrainerTables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeTrainerTables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeTrainerTables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.ChangeCustomerTable">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeCustomerTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeCustomerTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeCustomerTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.ChangeTrainerAndCustomerTables">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeTrainerAndCustomerTables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeTrainerAndCustomerTables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeTrainerAndCustomerTables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.RemovePhoneNumberFromUserTable">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.RemovePhoneNumberFromUserTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.RemovePhoneNumberFromUserTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.RemovePhoneNumberFromUserTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.ChangeTrainerAndCustomerTablesToNullable">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeTrainerAndCustomerTablesToNullable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeTrainerAndCustomerTablesToNullable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeTrainerAndCustomerTablesToNullable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.DetelePriceForHourColumn">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.DetelePriceForHourColumn.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.DetelePriceForHourColumn.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.DetelePriceForHourColumn.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.AddSpecializationColumnToTrainerTable">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddSpecializationColumnToTrainerTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddSpecializationColumnToTrainerTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddSpecializationColumnToTrainerTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.AddTrainingProgramTable">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddTrainingProgramTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddTrainingProgramTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddTrainingProgramTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.ChangeVkLinkToInstagramLink">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeVkLinkToInstagramLink.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeVkLinkToInstagramLink.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeVkLinkToInstagramLink.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.ChangeNullConditions">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeNullConditions.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeNullConditions.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeNullConditions.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.AddReviews">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddReviews.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddReviews.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddReviews.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.ChangeReviewDateColumnName">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeReviewDateColumnName.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeReviewDateColumnName.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeReviewDateColumnName.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.ChangeReviewsTableName">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeReviewsTableName.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeReviewsTableName.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeReviewsTableName.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.AddReviewTitleToReviewTable">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddReviewTitleToReviewTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddReviewTitleToReviewTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddReviewTitleToReviewTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
