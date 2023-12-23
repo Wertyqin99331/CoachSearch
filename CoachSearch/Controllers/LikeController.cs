@@ -1,8 +1,9 @@
 ﻿using CoachSearch.Data.Entities;
 using CoachSearch.Extensions;
 using CoachSearch.Models;
-using CoachSearch.Models.Dto.Review;
-using CoachSearch.Repositories.Review;
+using CoachSearch.Models.Dto.Like;
+using CoachSearch.Repositories.Customer;
+using CoachSearch.Repositories.Like;
 using CoachSearch.Repositories.Trainer;
 using CoachSearch.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
@@ -12,32 +13,33 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoachSearch.Controllers;
 
 [ApiController]
-[Route("review")]
-public class ReviewController(
+[Route("api/like")]
+public class LikeController(
 	IUserService userService,
 	UserManager<ApplicationUser> userManager,
 	ITrainerRepository trainerRepository,
-	IReviewRepository reviewRepository) : Controller
+	ILikeRepository likeRepository,
+	ICustomerRepository customerRepository) : Controller
 {
 	/// <summary>
-	/// Add review to a trainer
+	/// Toggle user like to a trainer
 	/// </summary>
 	/// <param name="body"></param>
 	/// <returns></returns>
 	[Authorize(Roles = "Customer")]
-	[HttpPost("add")]
-	[ProducesResponseType(StatusCodes.Status201Created)]
+	[HttpPost]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType<ResponseError>(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> AddReview([FromBody] AddReviewRequestDto body)
+	public async Task<IActionResult> ToggleLike([FromBody] ToggleLikeRequestDto body)
 	{
 		var (email, phoneNumber) = userService.GetCredentials();
 		if (email == null && phoneNumber == null)
-			return BadRequest(new ResponseError("Can't read credentials from jwt"));
+			return BadRequest(new ResponseError("No email and phone number in your jwt"));
 
 		var user = await userManager.FindByCredentialsAsync(email, phoneNumber);
 		if (user == null)
-			return BadRequest(new ResponseError("There is no use with these credentials"));
+			return BadRequest(new ResponseError("There is no user with these credentials"));
 
 		var customer = user.Customer;
 		if (customer == null)
@@ -45,14 +47,11 @@ public class ReviewController(
 
 		var trainer = await trainerRepository.GetByIdAsync(body.TrainerId);
 		if (trainer == null)
-			return BadRequest(new ResponseError("There is no trainer with this id"));
+			return BadRequest(new ResponseError("There is no trainer with this id)"));
 
-		var addingResult =
-			await reviewRepository.AddReviewAsync(body.ReviewTitle, body.ReviewText,
-				DateOnly.FromDateTime(DateTime.Now), customer, trainer);
-
-		return addingResult
-			? Created()
+		var result = await likeRepository.ToggleLike(customer, trainer);
+		return result
+			? NoContent()
 			: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 	}
 }

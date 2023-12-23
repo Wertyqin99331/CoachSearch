@@ -17,5 +17,7 @@ public class AllTrainersResponseDto
 
 	public required string Specialization { get; set; } = null!;
 	
+	public required int LikesCount { get; set; }
+	
 	public required string? AvatarUrl { get; set; }
 }

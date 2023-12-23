@@ -4,6 +4,7 @@ using CoachSearch.Congiguration;
 using CoachSearch.Data;
 using CoachSearch.Data.Entities;
 using CoachSearch.Repositories.Customer;
+using CoachSearch.Repositories.Like;
 using CoachSearch.Repositories.Review;
 using CoachSearch.Repositories.Trainer;
 using CoachSearch.Repositories.TrainingProgram;
@@ -67,6 +68,7 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ITrainerRepository, TrainerRepository>();
 builder.Services.AddScoped<ITrainingProgramRepository, TrainingProgramRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
 builder.Services.AddEndpointsApiExplorer();

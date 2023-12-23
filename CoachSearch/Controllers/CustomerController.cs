@@ -74,7 +74,7 @@ public class CustomerController(IUserService userService,
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[ProducesResponseType(StatusCodes.Status403Forbidden)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> UpdateTrainerProfile([FromBody] CustomerProfileRequestDto body)
+	public async Task<IActionResult> UpdateCustomerProfile([FromBody] CustomerProfileRequestDto body)
 	{
 		var (email, phoneNumber) = userService.GetCredentials();
 		if (email == null && phoneNumber == null)
@@ -99,14 +99,14 @@ public class CustomerController(IUserService userService,
 
 			var result = await customerRepository.AddAsync(newCustomerInfo);
 			return result
-				? Ok()
+				? NoContent()
 				: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 		}
 		else
 		{
 			var result = await customerRepository.UpdateAsync(customerInfo.CustomerId, body);
 			return result
-				? Ok()
+				? NoContent()
 				: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 		}
 	}

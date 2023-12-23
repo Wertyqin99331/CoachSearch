@@ -27,10 +27,12 @@ public class Trainer
 
 	[MaxLength(100)] public string? InstagramLink { get; set; }
 
+	
 	[MaxLength(50)] public long UserInfoId { get; set; }
 	[ForeignKey("UserInfoId")] public virtual ApplicationUser UserInfo { get; set; } = null!;
-
-
+	
 	public virtual List<TrainingProgram> TrainingPrograms { get; set; } = null!;
 	public virtual List<Review> Reviews { get; set; } = null!;
+
+	public virtual List<Like> Likes { get; set; } = null!;
 }

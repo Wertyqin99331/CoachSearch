@@ -16,7 +16,7 @@ public class ReviewRepository(ApplicationDbContext dbContext): IReviewRepository
 				Customer = customer,
 				Trainer = trainer
 			};
-			await dbContext.AddAsync(newReview);
+			await dbContext.Reviews.AddAsync(newReview);
 			await dbContext.SaveChangesAsync();
 			return true;
 		}

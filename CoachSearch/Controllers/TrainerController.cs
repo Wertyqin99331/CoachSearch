@@ -41,7 +41,7 @@ public class TrainerController(
 			                    && t.LastName != null && t.City != null && t.Specialization != null);*/
 
 		if (!string.IsNullOrWhiteSpace(city))
-			trainerQuery = trainerQuery.Where(t => t.City!.ToLower() == city.ToLower());
+			trainerQuery = trainerQuery.Where(t => t.City.ToLower() == city.ToLower());
 
 		var result = await trainerQuery
 			.Select(t => new AllTrainersResponseDto()
@@ -52,7 +52,8 @@ public class TrainerController(
 				LastName = t.LastName,
 				City = t.City,
 				AvatarUrl = t.AvatarUrl,
-				Specialization = t.Specialization
+				Specialization = t.Specialization,
+				LikesCount = t.Likes.Count
 			})
 			.ToListAsync();
 		return Ok(result);
@@ -94,7 +95,8 @@ public class TrainerController(
 				ReviewText = r.ReviewText,
 				CustomerName = r.Customer.FirstName,
 				ProgramName = r.ReviewTitle
-			}).ToList()
+			}).ToList(),
+			LikesCount = trainer.Likes.Count
 		};
 
 		return Ok(result);

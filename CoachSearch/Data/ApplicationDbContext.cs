@@ -12,9 +12,10 @@ public sealed class ApplicationDbContext
 	{
 		Database.Migrate();
 	}
-
+	
 	public DbSet<Customer> Customers { get; set; } = null!;
 	public DbSet<Trainer> Trainers { get; set; } = null!;
 	public DbSet<TrainingProgram> TrainingPrograms { get; set; } = null!;
 	public DbSet<Review> Reviews { get; set; } = null!;
+	public DbSet<Like> Likes { get; set; } = null!;
 }

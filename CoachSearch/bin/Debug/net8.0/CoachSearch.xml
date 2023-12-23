@@ -31,9 +31,16 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CoachSearch.Controllers.CustomerController.UpdateTrainerProfile(CoachSearch.Models.Dto.ProfileDto.CustomerProfileRequestDto)">
+        <member name="M:CoachSearch.Controllers.CustomerController.UpdateCustomerProfile(CoachSearch.Models.Dto.ProfileDto.CustomerProfileRequestDto)">
             <summary>
             Update a customer profile
+            </summary>
+            <param name="body"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CoachSearch.Controllers.LikeController.ToggleLike(CoachSearch.Models.Dto.Like.ToggleLikeRequestDto)">
+            <summary>
+            Toggle user like to a trainer
             </summary>
             <param name="body"></param>
             <returns></returns>
@@ -298,6 +305,18 @@
             <inheritdoc />
         </member>
         <member name="M:CoachSearch.Migrations.AddReviewTitleToReviewTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.AddLikesTable">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddLikesTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddLikesTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddLikesTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

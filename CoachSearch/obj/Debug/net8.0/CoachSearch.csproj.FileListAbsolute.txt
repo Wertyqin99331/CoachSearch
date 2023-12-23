@@ -122,3 +122,4 @@ C:\Users\flywo\Desktop\Proga\Ulearn Rebirth\CoachSearch\CoachSearch\bin\Debug\ne
 C:\Users\flywo\Desktop\Proga\Ulearn Rebirth\CoachSearch\CoachSearch\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
 C:\Users\flywo\Desktop\Proga\Ulearn Rebirth\CoachSearch\CoachSearch\bin\Debug\net8.0\AutoMapper.dll
 C:\Users\flywo\Desktop\Proga\Ulearn Rebirth\CoachSearch\CoachSearch\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\flywo\Desktop\Proga\Ulearn Rebirth\CoachSearch\CoachSearch\obj\Debug\net8.0\CoachSearch.sourcelink.json
