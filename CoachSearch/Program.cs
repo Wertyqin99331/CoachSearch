@@ -8,11 +8,13 @@ using CoachSearch.Repositories.Like;
 using CoachSearch.Repositories.Review;
 using CoachSearch.Repositories.Trainer;
 using CoachSearch.Repositories.TrainingProgram;
+using CoachSearch.Services.FileUploadService;
 using CoachSearch.Services.Token;
 using CoachSearch.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -63,6 +65,7 @@ builder.Services.AddAuthentication(options =>
 	});
 
 builder.Services.AddSingleton<ITokenService, TokenService>();
+builder.Services.AddSingleton<IFileUploadService, FileUploadService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ITrainerRepository, TrainerRepository>();
@@ -107,6 +110,13 @@ var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+	FileProvider = new PhysicalFileProvider(
+		Path.Combine(builder.Environment.ContentRootPath, "Images")),
+	RequestPath = "/Images"
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

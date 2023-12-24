@@ -2,13 +2,19 @@
 using CoachSearch.Congiguration;
 using CoachSearch.Data;
 using CoachSearch.Models.Dto;
+using CoachSearch.Services.FileUploadService;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoachSearch.Repositories.Trainer;
 
-public class TrainerRepository(ApplicationDbContext dbContext, IMapper mapper): ITrainerRepository
+public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadService fileUploadService): ITrainerRepository
 {
+	public Task SaveChangesAsync()
+	{
+		return dbContext.SaveChangesAsync();
+	}
+
 	public Task<Data.Entities.Trainer?> GetByIdAsync(long id)
 	{
 		return dbContext.Trainers.FirstOrDefaultAsync(t => t.TrainerId == id);
@@ -75,7 +81,14 @@ public class TrainerRepository(ApplicationDbContext dbContext, IMapper mapper): 
 			trainer.Info = profile.Info;
 			trainer.TelegramLink = profile.TelegramLink;
 			trainer.InstagramLink = profile.InstagramLink;
+			
+			if (trainer.AvatarFileName != null)
+				fileUploadService.DeleteFile(trainer.AvatarFileName);
 
+			trainer.AvatarFileName = profile.Avatar != null
+				? await fileUploadService.UploadFileAsync(profile.Avatar)
+				: null;
+			
 			await dbContext.SaveChangesAsync();
 			return true;
 		}

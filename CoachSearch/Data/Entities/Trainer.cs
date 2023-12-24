@@ -21,7 +21,7 @@ public class Trainer
 
 	[MaxLength(500)] public string? Info { get; set; }
 
-	[MaxLength(1000)] public string? AvatarUrl { get; set; }
+	[MaxLength(1000)] public string? AvatarFileName { get; set; }
 
 	[MaxLength(100)] public string? TelegramLink { get; set; }
 

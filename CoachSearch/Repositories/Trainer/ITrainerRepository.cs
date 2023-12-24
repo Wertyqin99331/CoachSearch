@@ -5,6 +5,8 @@ namespace CoachSearch.Repositories.Trainer;
 
 public interface ITrainerRepository
 {
+	Task SaveChangesAsync();
+	
 	Task<Data.Entities.Trainer?> GetByIdAsync(long id);
 	
 	Task<bool> AddAsync(Data.Entities.Trainer trainer);

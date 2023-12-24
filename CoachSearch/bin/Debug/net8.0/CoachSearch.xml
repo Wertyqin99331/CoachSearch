@@ -319,5 +319,29 @@
         <member name="M:CoachSearch.Migrations.AddLikesTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:CoachSearch.Migrations.ChangeAvatarColumnTrainerTable">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeAvatarColumnTrainerTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeAvatarColumnTrainerTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeAvatarColumnTrainerTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.ChangeAvatarNameColumn">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeAvatarNameColumn.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeAvatarNameColumn.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeAvatarNameColumn.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

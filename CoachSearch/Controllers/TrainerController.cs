@@ -7,6 +7,7 @@ using CoachSearch.Models.Dto.Review;
 using CoachSearch.Models.Enums;
 using CoachSearch.Repositories.Trainer;
 using CoachSearch.Repositories.TrainingProgram;
+using CoachSearch.Services.FileUploadService;
 using CoachSearch.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -22,7 +23,8 @@ public class TrainerController(
 	ITrainerRepository trainerRepository,
 	ITrainingProgramRepository trainingProgramRepository,
 	IUserService userService,
-	UserManager<ApplicationUser> userManager) : Controller
+	UserManager<ApplicationUser> userManager,
+	IFileUploadService fileUploadService): Controller
 {
 	/// <summary>
 	/// Get all trainers info
@@ -39,7 +41,7 @@ public class TrainerController(
 		/*trainerQuery = trainerQuery.Where(t =>
 			t.FirstName != null && t.MiddleName != null
 			                    && t.LastName != null && t.City != null && t.Specialization != null);*/
-
+		
 		if (!string.IsNullOrWhiteSpace(city))
 			trainerQuery = trainerQuery.Where(t => t.City.ToLower() == city.ToLower());
 
@@ -51,7 +53,7 @@ public class TrainerController(
 				MiddleName = t.MiddleName,
 				LastName = t.LastName,
 				City = t.City,
-				AvatarUrl = t.AvatarUrl,
+				AvatarUrl = GetAvatarUrl(Request, t.AvatarFileName),
 				Specialization = t.Specialization,
 				LikesCount = t.Likes.Count
 			})
@@ -82,7 +84,7 @@ public class TrainerController(
 			LastName = trainer.LastName,
 			Info = trainer.Info,
 			Specialization = trainer.Specialization,
-			AvatarUrl = trainer.AvatarUrl,
+			AvatarUrl = GetAvatarUrl(Request, trainer.AvatarFileName),
 			TelegramLink = trainer.TelegramLink,
 			City = trainer.City,
 			InstagramLink = trainer.InstagramLink,
@@ -101,33 +103,6 @@ public class TrainerController(
 
 		return Ok(result);
 	}
-
-	/*[Authorize(Roles = "Trainer")]
-	[HttpPost("programs")]
-	public async Task<IActionResult> AddTrainingPrograms([FromBody] AddTrainingProgramsRequestDto body)
-	{
-		var (email, phoneNumber) = userService.GetCredentials();
-		if (email == null && phoneNumber == null)
-			return BadRequest(new ResponseError("No credentials in jwt"));
-
-		var user = await userManager.FindByCredentialsAsync(email, phoneNumber);
-		if (user == null)
-			return BadRequest(new ResponseError("Can't find user with these credentials"));
-
-		var trainerInfo = user.Trainer;
-		if (trainerInfo == null)
-			return BadRequest(new ResponseError("There is no trainer associated with this user"));
-		
-		var result = await trainingProgramRepository.AddTrainingProgramsByTrainerIdAsync(trainerInfo.TrainerId, body.TrainingPrograms.Select(td => new TrainingProgram()
-		{
-			Trainer = trainerInfo,
-			TrainingProgramName = td.TrainingProgramName,
-			TrainingProgramPrice = td.TrainingProgramPrice
-		}));
-		return result
-			? Ok()
-			: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
-	}*/
 	
 	/// <summary>
 	/// Get a trainer profile
@@ -170,7 +145,7 @@ public class TrainerController(
 				City = trainerInfo.City,
 				Info = trainerInfo.Info,
 				Specialization = trainerInfo.Specialization,
-				AvatarUrl = trainerInfo.AvatarUrl,
+				AvatarUrl = GetAvatarUrl(Request, trainerInfo.AvatarFileName),
 				TelegramLink = trainerInfo.TelegramLink,
 				InstagramLink = trainerInfo.InstagramLink,
 				TrainingPrograms = await trainingProgramRepository
@@ -194,7 +169,7 @@ public class TrainerController(
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[ProducesResponseType(StatusCodes.Status403Forbidden)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> UpdateTrainerProfile([FromBody] TrainerProfileRequestDto body)
+	public async Task<IActionResult> UpdateTrainerProfile([FromForm] TrainerProfileRequestDto body)
 	{
 		var (email, phoneNumber) = userService.GetCredentials();
 		if (email == null && phoneNumber == null)
@@ -207,6 +182,10 @@ public class TrainerController(
 		var trainerInfo = user.Trainer;
 		if (trainerInfo == null)
 		{
+			var fileName = body.Avatar != null
+				? await fileUploadService.UploadFileAsync(body.Avatar)
+				: null;
+			
 			var newTrainerInfo = new Trainer()
 			{
 				FirstName = body.FirstName,
@@ -217,7 +196,7 @@ public class TrainerController(
 				UserInfo = user,
 				InstagramLink = body.InstagramLink,
 				TelegramLink = body.TelegramLink,
-				AvatarUrl = null,
+				AvatarFileName = fileName,
 				Info = body.Info,
 				TrainingPrograms = body.TrainingPrograms.Select(t => new TrainingProgram()
 				{
@@ -227,16 +206,22 @@ public class TrainerController(
 			};
 
 			var result = await trainerRepository.AddAsync(newTrainerInfo);
+			
 			return result
-				? Ok()
+				? NoContent()
 				: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 		}
 		else
 		{
 			var result = await trainerRepository.UpdateAsync(trainerInfo.TrainerId, body);
 			return result
-				? Ok()
+				? NoContent()
 				: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 		}
 	}
+
+	[NonAction]
+	private static string? GetAvatarUrl(HttpRequest request, string? fileName) => fileName == null
+		? null
+		: $"{request.Scheme}://{request.Host}{request.PathBase}/Images/{fileName}";
 }

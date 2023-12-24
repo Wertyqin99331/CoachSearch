@@ -22,4 +22,6 @@ public class TrainerProfileRequestDto
 	public string? TelegramLink { get; set; }
 	
 	public string? InstagramLink { get; set; }
+	
+	public IFormFile? Avatar { get; set; }
 }

@@ -39,7 +39,7 @@ public class AuthController(
 	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	[EndpointDescription("Register a user")]
-	public async Task<IActionResult> Register([FromBody] RegistrationRequestDto registrationRequestDto)
+	public async Task<IActionResult> Register([FromForm] RegistrationRequestDto registrationRequestDto)
 	{
 		if (registrationRequestDto.Email is null && registrationRequestDto.PhoneNumber is null)
 			return BadRequest(new ResponseError("Not enough information to register"));
@@ -99,7 +99,7 @@ public class AuthController(
 	[HttpPost("login")]
 	[ProducesResponseType<LoginResponseDto>(StatusCodes.Status200OK)]
 	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+	public async Task<IActionResult> Login([FromForm] LoginRequestDto loginRequestDto)
 	{
 		if (loginRequestDto.Email is null && loginRequestDto.PhoneNumber is null)
 			return BadRequest(new ResponseError("Not enough information to register"));
@@ -132,7 +132,7 @@ public class AuthController(
 	[HttpPost("change-password")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDto body)
+	public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordRequestDto body)
 	{
 		var (email, phoneNumber) = userService.GetCredentials();
 		var user = await userManager.FindByCredentialsAsync(email, phoneNumber);
