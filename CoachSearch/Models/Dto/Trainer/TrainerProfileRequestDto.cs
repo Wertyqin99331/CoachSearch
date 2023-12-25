@@ -15,7 +15,7 @@ public class TrainerProfileRequestDto
 	
 	[Required] [MaxLength(300)] public string Specialization { get; set; } = null!;
 
-	[Required] public List<TrainingProgramDto> TrainingPrograms { get; set; } = null!;
+	/*[Required] public List<TrainingProgramRequestDto> TrainingPrograms { get; set; } = null!;*/
 	
 	[MaxLength(500)] public string? Info { get; set; }
 	

@@ -2,6 +2,7 @@
 using CoachSearch.Congiguration;
 using CoachSearch.Data;
 using CoachSearch.Models.Dto;
+using CoachSearch.Models.Dto.TrainerProgram;
 using CoachSearch.Services.FileUploadService;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
@@ -72,12 +73,12 @@ public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadServic
 			trainer.LastName = profile.LastName;
 			trainer.City = profile.City;
 			trainer.Specialization = profile.Specialization;
-			trainer.TrainingPrograms = profile.TrainingPrograms.Select(t =>
+			/*trainer.TrainingPrograms = profile.TrainingPrograms.Select(t =>
 				new Data.Entities.TrainingProgram()
 				{
 					TrainingProgramName = t.TrainingProgramName,
 					TrainingProgramPrice = t.TrainingProgramPrice
-				}).ToList();
+				}).ToList();*/
 			trainer.Info = profile.Info;
 			trainer.TelegramLink = profile.TelegramLink;
 			trainer.InstagramLink = profile.InstagramLink;
@@ -89,6 +90,29 @@ public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadServic
 				? await fileUploadService.UploadFileAsync(profile.Avatar)
 				: null;
 			
+			await dbContext.SaveChangesAsync();
+			return true;
+		}
+		catch
+		{
+			return false;
+		}
+	}
+
+	public async Task<bool> UpdateTrainingProgramsAsync(long trainerId, List<TrainingProgramRequestDto> trainingPrograms)
+	{
+		try
+		{
+			var trainer = await dbContext.Trainers.FirstOrDefaultAsync(t => t.TrainerId == trainerId);
+			if (trainer == null)
+				return false;
+
+			trainer.TrainingPrograms = trainingPrograms.Select(t => new Data.Entities.TrainingProgram()
+			{
+				TrainingProgramName = t.TrainingProgramName,
+				TrainingProgramPrice = t.TrainingProgramPrice
+			}).ToList();
+
 			await dbContext.SaveChangesAsync();
 			return true;
 		}

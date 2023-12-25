@@ -4,6 +4,7 @@ using CoachSearch.Models;
 using CoachSearch.Models.Dto;
 using CoachSearch.Models.Dto.ProfileDto;
 using CoachSearch.Models.Dto.Review;
+using CoachSearch.Models.Dto.Trainer;
 using CoachSearch.Models.Enums;
 using CoachSearch.Repositories.Trainer;
 using CoachSearch.Repositories.TrainingProgram;
@@ -195,14 +196,14 @@ public class TrainerController(
 				Specialization = body.Specialization,
 				UserInfo = user,
 				InstagramLink = body.InstagramLink,
-				TelegramLink = body.TelegramLink,
+				TelegramLink = body.TelegramLink, 
 				AvatarFileName = fileName,
 				Info = body.Info,
-				TrainingPrograms = body.TrainingPrograms.Select(t => new TrainingProgram()
+				/*TrainingPrograms = body.TrainingPrograms.Select(t => new TrainingProgram()
 				{
 					TrainingProgramName = t.TrainingProgramName,
 					TrainingProgramPrice = t.TrainingProgramPrice
-				}).ToList()
+				}).ToList()*/
 			};
 
 			var result = await trainerRepository.AddAsync(newTrainerInfo);
@@ -218,6 +219,38 @@ public class TrainerController(
 				? NoContent()
 				: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 		}
+	}
+	
+	/// <summary>
+	/// Update training programs to the trainer profile
+	/// </summary>
+	/// <param name="body"></param>
+	/// <returns></returns>
+	[Authorize(Roles = "Trainer")]
+	[HttpPost("profile/trainingPrograms")]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+	[ProducesResponseType(StatusCodes.Status403Forbidden)]
+	[ProducesResponseType<ResponseError>(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> UpdateTrainingPrograms([FromBody] UpdateTrainingProgramsRequestDto body)
+	{
+		var (email, phoneNumber) = userService.GetCredentials();
+		if (email == null && phoneNumber == null)
+			return BadRequest(new ResponseError("Can't read credentials from jwt"));
+
+		var user = await userManager.FindByCredentialsAsync(email, phoneNumber);
+		if (user == null)
+			return BadRequest(new ResponseError("There is no user with these credentials"));
+
+		var trainerInfo = user.Trainer;
+		if (trainerInfo == null)
+			return BadRequest(new ResponseError("There is no trainer profile associated with this user"));
+
+		var updateResult = await trainerRepository.UpdateTrainingProgramsAsync(trainerInfo.TrainerId, body.TrainingPrograms);
+		return updateResult
+			? NoContent()
+			: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something went wrong"));
 	}
 
 	[NonAction]

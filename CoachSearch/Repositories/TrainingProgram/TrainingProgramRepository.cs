@@ -22,6 +22,7 @@ public class TrainingProgramRepository(ApplicationDbContext dbContext, ITrainerR
 		return GetAllByTrainerIdQueryable(trainerId)
 			.Select(tp => new TrainingProgramDto()
 			{
+				TrainingProgramId = tp.TrainingProgramId,
 				TrainingProgramName = tp.TrainingProgramName,
 				TrainingProgramPrice = tp.TrainingProgramPrice
 			});

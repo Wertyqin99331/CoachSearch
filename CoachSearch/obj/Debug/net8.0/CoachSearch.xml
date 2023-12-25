@@ -79,6 +79,13 @@
             <param name="body"></param>
             <returns></returns>
         </member>
+        <member name="M:CoachSearch.Controllers.TrainerController.UpdateTrainingPrograms(CoachSearch.Models.Dto.Trainer.UpdateTrainingProgramsRequestDto)">
+            <summary>
+            Update training programs to the trainer profile
+            </summary>
+            <param name="body"></param>
+            <returns></returns>
+        </member>
         <member name="T:CoachSearch.Migrations.Initial">
             <inheritdoc />
         </member>
