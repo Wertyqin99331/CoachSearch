@@ -110,12 +110,12 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-app.UseCors(options =>
-{
-	options.WithOrigins("http://localhost:3000")
-		.AllowAnyMethod()
-		.AllowAnyHeader();
-});
+app.UseCors(corsOptions => corsOptions
+	.AllowAnyHeader()
+	.AllowAnyMethod()
+	.SetIsOriginAllowed((host) => true)
+	.AllowCredentials()
+);
 
 app.UseAuthentication();
 app.UseAuthorization();
