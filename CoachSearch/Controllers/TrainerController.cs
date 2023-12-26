@@ -199,11 +199,6 @@ public class TrainerController(
 				TelegramLink = body.TelegramLink, 
 				AvatarFileName = fileName,
 				Info = body.Info,
-				/*TrainingPrograms = body.TrainingPrograms.Select(t => new TrainingProgram()
-				{
-					TrainingProgramName = t.TrainingProgramName,
-					TrainingProgramPrice = t.TrainingProgramPrice
-				}).ToList()*/
 			};
 
 			var result = await trainerRepository.AddAsync(newTrainerInfo);
