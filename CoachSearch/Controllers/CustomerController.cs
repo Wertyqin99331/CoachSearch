@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoachSearch.Controllers;
 
+[ApiController]
+[Route("/api/customer")]
 public class CustomerController(IUserService userService, 
 	UserManager<ApplicationUser> userManager,
 	ICustomerRepository customerRepository) : Controller
@@ -20,7 +22,7 @@ public class CustomerController(IUserService userService,
 	/// </summary>
 	/// <returns></returns>
 	[Authorize(Roles = "Customer")]
-	[HttpGet("customer")]
+	[HttpGet("profile")]
 	[ProducesResponseType<CustomerProfileResponseDto>(StatusCodes.Status200OK)]
 	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
