@@ -49,11 +49,10 @@ public class CustomerRepository(ApplicationDbContext dbContext): ICustomerReposi
 			if (customer == null)
 				return false;
 
-			customer.FirstName = profile.FirstName;
-			customer.MiddleName = profile.MiddleName;
-			customer.LastName = profile.LastName;
-			customer.City = profile.City;
+			customer.FullName = profile.FullName;
 			customer.Info = profile.Info;
+			customer.VkLink = profile.VkLink;
+			customer.TelegramLink = profile.TelegramLink;
 
 			await dbContext.SaveChangesAsync();
 			return true;

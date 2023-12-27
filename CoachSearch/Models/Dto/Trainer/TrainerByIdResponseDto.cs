@@ -8,14 +8,8 @@ public class TrainerByIdResponseDto
 {
 	public required long TrainerId { get; set; }
 	
-	public required string FirstName { get; set; } = null!;
-
-	public required string MiddleName { get; set; } = null!;
-
-	public required string LastName { get; set; } = null!;
-
-	public string City { get; set; } = null!;
-
+	public required string FullName { get; set; }
+	
 	public required string? Info { get; set; }
 
 	public required string Specialization { get; set; } = null!;
@@ -26,7 +20,7 @@ public class TrainerByIdResponseDto
 
 	public required string? TelegramLink { get; set; } 
 
-	public required string? InstagramLink { get; set; }
+	public required string? VkLink { get; set; }
 	
 	public required List<TrainingProgramDto> TrainingPrograms { get; set; }
 	

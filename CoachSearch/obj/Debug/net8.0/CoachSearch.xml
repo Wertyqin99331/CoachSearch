@@ -4,11 +4,18 @@
         <name>CoachSearch</name>
     </assembly>
     <members>
-        <member name="M:CoachSearch.Controllers.AuthController.Register(CoachSearch.Models.Dto.RegistrationRequestDto)">
+        <member name="M:CoachSearch.Controllers.AuthController.RegisterCustomer(CoachSearch.Models.Dto.RegistrationCustomerRequestDto)">
             <summary>
-            Register a user
+            Register a customer
             </summary>
-            <param name="registrationRequestDto"></param>
+            <param name="body"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CoachSearch.Controllers.AuthController.RegisterTrainer(CoachSearch.Models.Dto.Review.TrainerRegistrationRequestDto)">
+            <summary>
+            Register a customer
+            </summary>
+            <param name="body"></param>
             <returns></returns>
         </member>
         <member name="M:CoachSearch.Controllers.AuthController.Login(CoachSearch.Models.Dto.LoginRequestDto)">
@@ -52,7 +59,7 @@
             <param name="body"></param>
             <returns></returns>
         </member>
-        <member name="M:CoachSearch.Controllers.TrainerController.GetTrainers(System.String)">
+        <member name="M:CoachSearch.Controllers.TrainerController.GetTrainers">
             <summary>
             Get all trainers info
             </summary>
@@ -348,6 +355,18 @@
             <inheritdoc />
         </member>
         <member name="M:CoachSearch.Migrations.ChangeAvatarNameColumn.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.ChangeName">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeName.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeName.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.ChangeName.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

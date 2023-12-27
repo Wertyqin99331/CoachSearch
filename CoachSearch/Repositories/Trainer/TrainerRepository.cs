@@ -68,10 +68,7 @@ public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadServic
 			if (trainer == null)
 				return false;
 
-			trainer.FirstName = profile.FirstName;
-			trainer.MiddleName = profile.MiddleName;
-			trainer.LastName = profile.LastName;
-			trainer.City = profile.City;
+			trainer.FullName = profile.FullName;
 			trainer.Specialization = profile.Specialization;
 			/*trainer.TrainingPrograms = profile.TrainingPrograms.Select(t =>
 				new Data.Entities.TrainingProgram()
@@ -81,7 +78,7 @@ public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadServic
 				}).ToList();*/
 			trainer.Info = profile.Info;
 			trainer.TelegramLink = profile.TelegramLink;
-			trainer.InstagramLink = profile.InstagramLink;
+			trainer.VkLink = profile.VkLink;
 			
 			if (trainer.AvatarFileName != null)
 				fileUploadService.DeleteFile(trainer.AvatarFileName);

@@ -8,13 +8,11 @@ public class CustomerProfileResponseDto
 
 	public required string? PhoneNumber { get; set; }
 	
-	public required string FirstName { get; set; }
-
-	public required string MiddleName { get; set; }
-
-	public required string LastName { get; set; }
-
-	public required string City { get; set; } 
+	public required string FullName { get; set; }
+	
+	public required string? VkLink { get; set; }
+	
+	public required string? TelegramLink { get; set; }
 	
 	public required string? Info { get; set; }
 }

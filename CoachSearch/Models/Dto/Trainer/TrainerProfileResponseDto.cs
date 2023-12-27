@@ -9,14 +9,8 @@ public class TrainerProfileResponseDto
 
 	public required string? PhoneNumber { get; set; }
 
-	public required string FirstName { get; set; } = null!;
-
-	public required string MiddleName { get; set; } = null!;
-
-	public required string LastName { get; set; } = null!;
+	public required string FullName { get; set; }
 	
-	public string City { get; set; } = null!;
-
 	public required string Specialization { get; set; } = null!;
 	
 	public required string? Info { get; set; } 
@@ -27,5 +21,5 @@ public class TrainerProfileResponseDto
 
 	public required string? TelegramLink { get; set; }
 
-	public required string? InstagramLink { get; set; }
+	public required string? VkLink { get; set; }
 }

@@ -53,11 +53,10 @@ public class CustomerController(IUserService userService,
 				CustomerId = customerInfo.CustomerId,
 				Email = user.Email,
 				PhoneNumber = user.PhoneNumber,
-				FirstName = customerInfo.FirstName,
-				MiddleName = customerInfo.MiddleName,
-				LastName = customerInfo.LastName,
-				City = customerInfo.City,
-				Info = customerInfo.Info
+				FullName = customerInfo.FullName,
+				Info = customerInfo.Info,
+				TelegramLink = customerInfo.TelegramLink,
+				VkLink = customerInfo.VkLink
 			});
 		}
 
@@ -91,12 +90,11 @@ public class CustomerController(IUserService userService,
 		{
 			var newCustomerInfo = new Customer()
 			{
-				FirstName = body.FirstName,
-				MiddleName = body.MiddleName,
-				LastName = body.LastName,
-				City = body.City,
+				FullName = body.FullName,
 				UserInfo = user,
 				Info = body.Info,
+				TelegramLink = body.TelegramLink,
+				VkLink = body.VkLink
 			};
 
 			var result = await customerRepository.AddAsync(newCustomerInfo);

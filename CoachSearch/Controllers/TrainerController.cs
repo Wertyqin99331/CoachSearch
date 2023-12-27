@@ -35,25 +35,19 @@ public class TrainerController(
 	[HttpGet]
 	[ProducesResponseType<List<AllTrainersResponseDto>>(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> GetTrainers([FromQuery] string? city)
+	public async Task<IActionResult> GetTrainers()
 	{
 		var trainerQuery = trainerRepository.GetAllByQuery();
 
 		/*trainerQuery = trainerQuery.Where(t =>
 			t.FirstName != null && t.MiddleName != null
 			                    && t.LastName != null && t.City != null && t.Specialization != null);*/
-		
-		if (!string.IsNullOrWhiteSpace(city))
-			trainerQuery = trainerQuery.Where(t => t.City.ToLower() == city.ToLower());
 
 		var result = await trainerQuery
 			.Select(t => new AllTrainersResponseDto()
 			{
 				TrainerId = t.TrainerId,
-				FirstName = t.FirstName,
-				MiddleName = t.MiddleName,
-				LastName = t.LastName,
-				City = t.City,
+				FullName = t.FullName,
 				AvatarUrl = GetAvatarUrl(Request, t.AvatarFileName),
 				Specialization = t.Specialization,
 				LikesCount = t.Likes.Count
@@ -80,15 +74,12 @@ public class TrainerController(
 		var result = new TrainerByIdResponseDto()
 		{
 			TrainerId = trainer.TrainerId,
-			FirstName = trainer.FirstName,
-			MiddleName = trainer.MiddleName,
-			LastName = trainer.LastName,
+			FullName = trainer.FullName,
 			Info = trainer.Info,
 			Specialization = trainer.Specialization,
 			AvatarUrl = GetAvatarUrl(Request, trainer.AvatarFileName),
 			TelegramLink = trainer.TelegramLink,
-			City = trainer.City,
-			InstagramLink = trainer.InstagramLink,
+			VkLink = trainer.VkLink,
 			TrainingPrograms = await trainingProgramRepository
 				.GetAllByTrainerIdToDto(trainer.TrainerId)
 				.ToListAsync(),
@@ -96,7 +87,7 @@ public class TrainerController(
 			{
 				ReviewDate = r.ReviewDate,
 				ReviewText = r.ReviewText,
-				CustomerName = r.Customer.FirstName,
+				CustomerName = r.Customer.FullName,
 				ProgramName = r.ReviewTitle
 			}).ToList(),
 			LikesCount = trainer.Likes.Count
@@ -140,15 +131,12 @@ public class TrainerController(
 			{
 				Email = user.Email,
 				PhoneNumber = user.PhoneNumber,
-				FirstName = trainerInfo.FirstName,
-				MiddleName = trainerInfo.MiddleName,
-				LastName = trainerInfo.LastName,
-				City = trainerInfo.City,
+				FullName = trainerInfo.FullName,
 				Info = trainerInfo.Info,
 				Specialization = trainerInfo.Specialization,
 				AvatarUrl = GetAvatarUrl(Request, trainerInfo.AvatarFileName),
 				TelegramLink = trainerInfo.TelegramLink,
-				InstagramLink = trainerInfo.InstagramLink,
+				VkLink = trainerInfo.VkLink,
 				TrainingPrograms = await trainingProgramRepository
 					.GetAllByTrainerIdToDto(trainerInfo.TrainerId)
 					.ToListAsync()
@@ -189,13 +177,10 @@ public class TrainerController(
 			
 			var newTrainerInfo = new Trainer()
 			{
-				FirstName = body.FirstName,
-				MiddleName = body.MiddleName,
-				LastName = body.LastName,
-				City = body.City,
+				FullName = body.FullName,
 				Specialization = body.Specialization,
 				UserInfo = user,
-				InstagramLink = body.InstagramLink,
+				VkLink = body.VkLink,
 				TelegramLink = body.TelegramLink, 
 				AvatarFileName = fileName,
 				Info = body.Info,

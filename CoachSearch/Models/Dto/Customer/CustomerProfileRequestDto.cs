@@ -5,13 +5,11 @@ namespace CoachSearch.Models.Dto.ProfileDto;
 
 public class CustomerProfileRequestDto
 {
-	[Required] [MaxLength(25)] public string FirstName { get; set; } = null!;
+	[Required] [MaxLength(100)] public string FullName { get; set; } = null!;
 
-	[Required] [MaxLength(25)] public string MiddleName { get; set; } = null!;
+	[MaxLength(100)] public string? VkLink { get; set; }
 
-	[Required] [MaxLength(25)] public string LastName { get; set; } = null!;
+	[MaxLength(100)] public string? TelegramLink { get; set; }
 
-	[Required] [MaxLength(25)] public string City { get; set; } = null!;
-	
 	[MaxLength(500)] public string? Info { get; set; }
 }
