@@ -13,7 +13,7 @@
         </member>
         <member name="M:CoachSearch.Controllers.AuthController.RegisterTrainer(CoachSearch.Models.Dto.Review.TrainerRegistrationRequestDto)">
             <summary>
-            Register a customer
+            Register a trainer
             </summary>
             <param name="body"></param>
             <returns></returns>

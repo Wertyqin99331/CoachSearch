@@ -156,11 +156,11 @@ public class AuthController(
 	}
 	
 	/// <summary>
-	/// Register a customer
+	/// Register a trainer
 	/// </summary>
 	/// <param name="body"></param>
 	/// <returns></returns>
-	[HttpPost("register/customer")]
+	[HttpPost("register/trainer")]
 	[ProducesResponseType<LoginResponseDto>(StatusCodes.Status200OK)]
 	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
