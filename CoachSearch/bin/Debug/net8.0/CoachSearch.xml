@@ -22,7 +22,7 @@
             <summary>
             Login by email and password
             </summary>
-            <param name="loginRequestDto"></param>
+            <param name="body"></param>
             <returns></returns>
         </member>
         <member name="M:CoachSearch.Controllers.AuthController.ChangePassword(CoachSearch.Models.Dto.ChangePasswordRequestDto)">

@@ -4,12 +4,14 @@ namespace CoachSearch.Models.Dto;
 
 public class LoginRequestDto
 {
-	[EmailAddress]
+	/*[EmailAddress]
 	public string? Email { get; set; }
-	
+
 	[MinLength(11)]
 	[MaxLength(11)]
-	public string? PhoneNumber { get; set; }
+	public string? PhoneNumber { get; set; }*/
+
+	[Required] [MaxLength(50)] public string Login { get; set; } = null!;
 
 	[Required]
 	[MinLength(6)]

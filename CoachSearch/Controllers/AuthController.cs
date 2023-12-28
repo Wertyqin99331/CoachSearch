@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using CoachSearch.Data;
 using CoachSearch.Data.Entities;
@@ -152,7 +153,7 @@ public class AuthController(
 			return StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 
 		return await Login(new LoginRequestDto()
-			{ Email = registeredUser?.Email, PhoneNumber = registeredUser?.PhoneNumber, Password = body.Password });
+			{ Login = body.Email ?? body.PhoneNumber!, Password = body.Password });
 	}
 	
 	/// <summary>
@@ -217,28 +218,32 @@ public class AuthController(
 			return StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 
 		return await Login(new LoginRequestDto()
-			{ Email = registeredUser?.Email, PhoneNumber = registeredUser?.PhoneNumber, Password = body.Password });
+			{ Login = body.Email ?? body.PhoneNumber!, Password = body.Password });
 	}
 	
 	/// <summary>
 	/// Login by email and password
 	/// </summary>
-	/// <param name="loginRequestDto"></param>
+	/// <param name="body"></param>
 	/// <returns></returns>
 	[HttpPost("login")]
 	[ProducesResponseType<LoginResponseDto>(StatusCodes.Status200OK)]
 	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+	public async Task<IActionResult> Login([FromBody] LoginRequestDto body)
 	{
-		if (loginRequestDto.Email is null && loginRequestDto.PhoneNumber is null)
-			return BadRequest(new ResponseError("Not enough information to register"));
-
-		var managedUser = await userManager.FindByCredentialsAsync(loginRequestDto.Email, loginRequestDto.PhoneNumber);
+		var email = new EmailAddressAttribute().IsValid(body.Login) 
+			? body.Login 
+			: null;
+		var phoneNumber = body.Login.Length == 11 && body.Login.All(char.IsNumber)
+			? body.Login
+			: null;
+		
+		var managedUser = await userManager.FindByCredentialsAsync(email, phoneNumber);
 
 		if (managedUser == null)
 			return BadRequest(new ResponseError("There is no user with these credentials"));
 
-		var isPasswordValid = await userManager.CheckPasswordAsync(managedUser, loginRequestDto.Password);
+		var isPasswordValid = await userManager.CheckPasswordAsync(managedUser, body.Password);
 
 		if (!isPasswordValid)
 			return BadRequest(new ResponseError("Password was wrong"));
