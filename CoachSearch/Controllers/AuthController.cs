@@ -171,7 +171,7 @@ public class AuthController(
 	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	[EndpointDescription("Register a customer")]
-	public async Task<IActionResult> RegisterTrainer([FromBody] TrainerRegistrationRequestDto body)
+	public async Task<IActionResult> RegisterTrainer([FromForm] TrainerRegistrationRequestDto body)
 	{
 		if (body.Email is null && body.PhoneNumber is null)
 			return BadRequest(new ResponseError("Not enough information to register"));
