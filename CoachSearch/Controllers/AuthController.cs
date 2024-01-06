@@ -153,7 +153,7 @@ public class AuthController(
 			return StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 
 		return await Login(new LoginRequestDto()
-			{ Login = body.Email ?? body.PhoneNumber!, Password = body.Password });
+			{ Login = body.Email ?? body.PhoneNumber!, Password = body.Password, Role = UserRole.Customer});
 	}
 	
 	/// <summary>
@@ -218,7 +218,7 @@ public class AuthController(
 			return StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 
 		return await Login(new LoginRequestDto()
-			{ Login = body.Email ?? body.PhoneNumber!, Password = body.Password });
+			{ Login = body.Email ?? body.PhoneNumber!, Password = body.Password, Role = UserRole.Trainer});
 	}
 	
 	/// <summary>
@@ -253,7 +253,8 @@ public class AuthController(
 
 		return Ok(new LoginResponseDto()
 		{
-			Token = jwtToken
+			Token = jwtToken,
+			Role = body.Role
 		});
 	}
 
