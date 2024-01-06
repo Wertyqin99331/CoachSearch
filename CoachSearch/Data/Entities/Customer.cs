@@ -13,7 +13,6 @@ public class Customer
 	[MaxLength(100)]
 	public required string FullName { get; set; } = null!;
 	
-	
 	[MaxLength(500)]
 	public required string? Info { get; set; }
 	
@@ -22,6 +21,9 @@ public class Customer
 	
 	[MaxLength(100)]
 	public required string? TelegramLink { get; set; }
+	
+	[MaxLength(1000)]
+	public required string? AvatarFileName { get; set; }
 	
 	public long UserInfoId { get; set; }
 	[ForeignKey("UserInfoId")] public virtual ApplicationUser UserInfo { get; set; } = null!;

@@ -32,5 +32,5 @@ public class TrainerRegistrationRequestDto
 	[MaxLength(100)]
 	public string? TelegramLink { get; set; }
 	
-	
+	public IFormFile? Avatar { get; set; }
 }

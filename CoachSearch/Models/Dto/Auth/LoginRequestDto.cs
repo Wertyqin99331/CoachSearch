@@ -18,6 +18,4 @@ public class LoginRequestDto
 	[MinLength(6)]
 	[MaxLength(30)]
 	public required string Password { get; set; } = null!;
-	
-	[Required] public required UserRole Role { get; set; }
 }

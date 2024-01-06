@@ -94,7 +94,9 @@ public class CustomerController(IUserService userService,
 				UserInfo = user,
 				Info = body.Info,
 				TelegramLink = body.TelegramLink,
-				VkLink = body.VkLink
+				VkLink = body.VkLink,
+				AvatarFileName = null
+				// Todo 
 			};
 
 			var result = await customerRepository.AddAsync(newCustomerInfo);

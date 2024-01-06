@@ -369,5 +369,17 @@
         <member name="M:CoachSearch.Migrations.ChangeName.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:CoachSearch.Migrations.AddAvatarFileName">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddAvatarFileName.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddAvatarFileName.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddAvatarFileName.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

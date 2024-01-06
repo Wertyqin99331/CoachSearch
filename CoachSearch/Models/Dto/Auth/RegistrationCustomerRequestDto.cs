@@ -29,4 +29,6 @@ public class RegistrationCustomerRequestDto
 	
 	[MaxLength(100)]
 	public string? TelegramLink { get; set; }
+	
+	public IFormFile? Avatar { get; set; }
 }

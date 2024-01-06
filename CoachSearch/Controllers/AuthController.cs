@@ -10,6 +10,7 @@ using CoachSearch.Models.Dto.Review;
 using CoachSearch.Models.Enums;
 using CoachSearch.Repositories.Customer;
 using CoachSearch.Repositories.Trainer;
+using CoachSearch.Services.FileUploadService;
 using CoachSearch.Services.Token;
 using CoachSearch.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
@@ -29,7 +30,8 @@ public class AuthController(
 	ITokenService tokenService,
 	ICustomerRepository customerRepository, 
 	ITrainerRepository trainerRepository,
-	IUserService userService) : Controller
+	IUserService userService,
+	IFileUploadService fileUploadService) : Controller
 {
 	/*/// <summary>
 	/// Register a user
@@ -103,7 +105,7 @@ public class AuthController(
 	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	[EndpointDescription("Register a customer")]
-	public async Task<IActionResult> RegisterCustomer([FromBody] RegistrationCustomerRequestDto body)
+	public async Task<IActionResult> RegisterCustomer([FromForm] RegistrationCustomerRequestDto body)
 	{
 		if (body.Email is null && body.PhoneNumber is null)
 			return BadRequest(new ResponseError("Not enough information to register"));
@@ -145,7 +147,10 @@ public class AuthController(
 			Info = body.Info,
 			TelegramLink = body.TelegramLink,
 			VkLink = body.VkLink,
-			UserInfo = registeredUser!
+			UserInfo = registeredUser!,
+			AvatarFileName = body.Avatar == null
+			 ? null
+			 : await fileUploadService.UploadFileAsync(body.Avatar)
 		};
 
 		var customerAddingResult = await customerRepository.AddAsync(registeredCustomer);
@@ -153,7 +158,7 @@ public class AuthController(
 			return StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 
 		return await Login(new LoginRequestDto()
-			{ Login = body.Email ?? body.PhoneNumber!, Password = body.Password, Role = UserRole.Customer});
+			{ Login = body.Email ?? body.PhoneNumber!, Password = body.Password });
 	}
 	
 	/// <summary>
@@ -210,7 +215,9 @@ public class AuthController(
 			VkLink = body.VkLink,
 			UserInfo = registeredUser!,
 			Specialization = body.Specialization,
-			AvatarFileName = null
+			AvatarFileName = body.Avatar == null
+			 ? null
+			 : await fileUploadService.UploadFileAsync(body.Avatar)
 		};
 
 		var trainerAddingResult = await trainerRepository.AddAsync(registeredTrainer);
@@ -218,7 +225,7 @@ public class AuthController(
 			return StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 
 		return await Login(new LoginRequestDto()
-			{ Login = body.Email ?? body.PhoneNumber!, Password = body.Password, Role = UserRole.Trainer});
+			{ Login = body.Email ?? body.PhoneNumber!, Password = body.Password });
 	}
 	
 	/// <summary>
@@ -254,7 +261,9 @@ public class AuthController(
 		return Ok(new LoginResponseDto()
 		{
 			Token = jwtToken,
-			Role = body.Role
+			Role = managedUser.Trainer != null 
+				? UserRole.Trainer.ToString()
+				: UserRole.Customer.ToString()
 		});
 	}
 
