@@ -25,4 +25,11 @@ public class FileUploadService(IWebHostEnvironment webHostEnvironment): IFileUpl
 		if (File.Exists(filePath))
 			File.Delete(filePath);
 	}
+
+	public string? GetAvatarUrl(HttpRequest request, string? fileName)
+	{
+		return fileName == null
+			? null
+			: $"{request.Scheme}://{request.Host}{request.PathBase}/Images/{fileName}";
+	}
 }

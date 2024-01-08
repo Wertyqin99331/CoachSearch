@@ -4,6 +4,7 @@ using CoachSearch.Models;
 using CoachSearch.Models.Dto.ProfileDto;
 using CoachSearch.Models.Enums;
 using CoachSearch.Repositories.Customer;
+using CoachSearch.Services.FileUploadService;
 using CoachSearch.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,8 @@ namespace CoachSearch.Controllers;
 [Route("/api/customer")]
 public class CustomerController(IUserService userService, 
 	UserManager<ApplicationUser> userManager,
-	ICustomerRepository customerRepository) : Controller
+	ICustomerRepository customerRepository,
+	IFileUploadService fileUploadService) : Controller
 {
 	/// <summary>
 	/// Get a customer profile
@@ -56,7 +58,8 @@ public class CustomerController(IUserService userService,
 				FullName = customerInfo.FullName,
 				Info = customerInfo.Info,
 				TelegramLink = customerInfo.TelegramLink,
-				VkLink = customerInfo.VkLink
+				VkLink = customerInfo.VkLink,
+				AvatarUrl = fileUploadService.GetAvatarUrl(Request, customerInfo.AvatarFileName)
 			});
 		}
 

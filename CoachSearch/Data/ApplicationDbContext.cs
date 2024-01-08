@@ -8,6 +8,10 @@ namespace CoachSearch.Data;
 public sealed class ApplicationDbContext
 	: IdentityDbContext<ApplicationUser, IdentityRole<long>, long>
 {
+	public ApplicationDbContext()
+	{
+	}
+	
 	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options)
 	{
 		Database.Migrate();

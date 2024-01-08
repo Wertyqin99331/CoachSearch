@@ -18,6 +18,8 @@ public class Trainer
 	[MaxLength(100)] public required string FullName { get; set; } = null!;
 	
 	[MaxLength(300)] public required string Specialization { get; set; } = null!;
+	
+	[MaxLength(150)] public required string Address { get; set; }
 
 	[MaxLength(500)] public required string? Info { get; set; }
 

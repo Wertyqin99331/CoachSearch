@@ -48,7 +48,7 @@ public class TrainerController(
 			{
 				TrainerId = t.TrainerId,
 				FullName = t.FullName,
-				AvatarUrl = GetAvatarUrl(Request, t.AvatarFileName),
+				AvatarUrl = fileUploadService.GetAvatarUrl(Request, t.AvatarFileName),
 				Specialization = t.Specialization,
 				LikesCount = t.Likes.Count
 			})
@@ -74,10 +74,13 @@ public class TrainerController(
 		var result = new TrainerByIdResponseDto()
 		{
 			TrainerId = trainer.TrainerId,
+			Email = trainer.UserInfo.Email,
+			PhoneNumber = trainer.UserInfo.PhoneNumber,
+			Address = trainer.Address,
 			FullName = trainer.FullName,
 			Info = trainer.Info,
 			Specialization = trainer.Specialization,
-			AvatarUrl = GetAvatarUrl(Request, trainer.AvatarFileName),
+			AvatarUrl = fileUploadService.GetAvatarUrl(Request, trainer.AvatarFileName),
 			TelegramLink = trainer.TelegramLink,
 			VkLink = trainer.VkLink,
 			TrainingPrograms = await trainingProgramRepository
@@ -132,9 +135,10 @@ public class TrainerController(
 				Email = user.Email,
 				PhoneNumber = user.PhoneNumber,
 				FullName = trainerInfo.FullName,
+				Address = trainerInfo.Address,
 				Info = trainerInfo.Info,
 				Specialization = trainerInfo.Specialization,
-				AvatarUrl = GetAvatarUrl(Request, trainerInfo.AvatarFileName),
+				AvatarUrl = fileUploadService.GetAvatarUrl(Request, trainerInfo.AvatarFileName),
 				TelegramLink = trainerInfo.TelegramLink,
 				VkLink = trainerInfo.VkLink,
 				TrainingPrograms = await trainingProgramRepository
@@ -184,6 +188,7 @@ public class TrainerController(
 				TelegramLink = body.TelegramLink, 
 				AvatarFileName = fileName,
 				Info = body.Info,
+				Address = body.Address
 			};
 
 			var result = await trainerRepository.AddAsync(newTrainerInfo);
@@ -233,8 +238,8 @@ public class TrainerController(
 			: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something went wrong"));
 	}
 
-	[NonAction]
+	/*[NonAction]
 	private static string? GetAvatarUrl(HttpRequest request, string? fileName) => fileName == null
 		? null
-		: $"{request.Scheme}://{request.Host}{request.PathBase}/Images/{fileName}";
+		: $"{request.Scheme}://{request.Host}{request.PathBase}/Images/{fileName}";*/
 }

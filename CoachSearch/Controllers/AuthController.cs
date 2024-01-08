@@ -163,7 +163,7 @@ public class AuthController(
 	
 	/// <summary>
 	/// Register a trainer
-	/// </summary>
+	/// </summary>ч
 	/// <param name="body"></param>
 	/// <returns></returns>
 	[HttpPost("register/trainer")]
@@ -211,6 +211,7 @@ public class AuthController(
 		{
 			FullName = body.FullName,
 			Info = body.Info,
+			Address = body.Address,
 			TelegramLink = body.TelegramLink,
 			VkLink = body.VkLink,
 			UserInfo = registeredUser!,
@@ -236,7 +237,7 @@ public class AuthController(
 	[HttpPost("login")]
 	[ProducesResponseType<LoginResponseDto>(StatusCodes.Status200OK)]
 	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> Login([FromBody] LoginRequestDto body)
+	public async Task<IActionResult> Login([FromForm] LoginRequestDto body)
 	{
 		var email = new EmailAddressAttribute().IsValid(body.Login) 
 			? body.Login 

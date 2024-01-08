@@ -15,4 +15,6 @@ public class CustomerProfileResponseDto
 	public required string? TelegramLink { get; set; }
 	
 	public required string? Info { get; set; }
+	
+	public required string? AvatarUrl { get; set; }
 }

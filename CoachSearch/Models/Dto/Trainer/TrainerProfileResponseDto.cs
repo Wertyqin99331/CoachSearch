@@ -11,6 +11,8 @@ public class TrainerProfileResponseDto
 
 	public required string FullName { get; set; }
 	
+	public required string Address { get; set; }
+	
 	public required string Specialization { get; set; } = null!;
 	
 	public required string? Info { get; set; } 

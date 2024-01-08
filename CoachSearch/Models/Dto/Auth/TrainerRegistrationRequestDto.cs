@@ -21,6 +21,8 @@ public class TrainerRegistrationRequestDto
 	[MaxLength(100)]
 	public string FullName { get; set; } = null!;
 
+	[Required] [MaxLength(150)] public string Address { get; set; } = null!;
+
 	[Required] public string Specialization { get; set; } = null!;
 	
 	[MaxLength(500)]
