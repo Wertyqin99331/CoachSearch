@@ -6,7 +6,7 @@ namespace CoachSearch.Extensions;
 
 public static class UserManagerExtensions
 {
-	public static Task<ApplicationUser?> FindByPhoneNumberAsync(this UserManager<ApplicationUser> userManager,
+	public static Task<ApplicationUser?>? FindByPhoneNumberAsync(this UserManager<ApplicationUser> userManager,
 		string phoneNumber)
 	{
 		return userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
