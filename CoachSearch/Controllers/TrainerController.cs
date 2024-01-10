@@ -43,6 +43,10 @@ public class TrainerController(
 			t.FirstName != null && t.MiddleName != null
 			                    && t.LastName != null && t.City != null && t.Specialization != null);*/
 
+
+		var (email, phoneNumber) = userService.GetCredentials();
+		var currentUser = userManager.FindByCredentialsAsync(email, phoneNumber);
+		
 		var result = await trainerQuery
 			.Select(t => new AllTrainersResponseDto()
 			{
@@ -50,7 +54,8 @@ public class TrainerController(
 				FullName = t.FullName,
 				AvatarUrl = fileUploadService.GetAvatarUrl(Request, t.AvatarFileName),
 				Specialization = t.Specialization,
-				LikesCount = t.Likes.Count
+				LikesCount = t.Likes.Count,
+				IsLiked = t.Likes.Any(l => l.CustomerId == currentUser.Id)
 			})
 			.ToListAsync();
 		return Ok(result);

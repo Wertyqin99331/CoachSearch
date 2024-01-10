@@ -93,6 +93,12 @@
             <param name="body"></param>
             <returns></returns>
         </member>
+        <member name="M:CoachSearch.Controllers.TrainerController.GetAllAddresses">
+            <summary>
+            Get all trainer addresses
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:CoachSearch.Migrations.Initial">
             <inheritdoc />
         </member>

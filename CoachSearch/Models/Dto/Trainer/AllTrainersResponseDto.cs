@@ -13,5 +13,7 @@ public class AllTrainersResponseDto
 	
 	public required int LikesCount { get; set; }
 	
+	public required bool IsLiked { get; set; }
+	
 	public required string? AvatarUrl { get; set; }
 }
