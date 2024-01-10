@@ -238,6 +238,20 @@ public class TrainerController(
 			: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something went wrong"));
 	}
 
+	/// <summary>
+	/// Get all trainer addresses
+	/// </summary>
+	/// <returns></returns>
+	[HttpGet("addresses")]
+	public async Task<IActionResult> GetAllAddresses()
+	{
+		var allAddresses = await trainerRepository.GetAllAddresses();
+		return Ok(new AllTrainerAddressesResponseDto()
+		{
+			Addresses = allAddresses
+		});
+	}
+
 	/*[NonAction]
 	private static string? GetAvatarUrl(HttpRequest request, string? fileName) => fileName == null
 		? null

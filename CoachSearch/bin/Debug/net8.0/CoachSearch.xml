@@ -14,7 +14,7 @@
         <member name="M:CoachSearch.Controllers.AuthController.RegisterTrainer(CoachSearch.Models.Dto.Review.TrainerRegistrationRequestDto)">
             <summary>
             Register a trainer
-            </summary>
+            </summary>ч
             <param name="body"></param>
             <returns></returns>
         </member>
@@ -379,6 +379,18 @@
             <inheritdoc />
         </member>
         <member name="M:CoachSearch.Migrations.AddAvatarFileName.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CoachSearch.Migrations.AddAddressToTrainerTable">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddAddressToTrainerTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddAddressToTrainerTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CoachSearch.Migrations.AddAddressToTrainerTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

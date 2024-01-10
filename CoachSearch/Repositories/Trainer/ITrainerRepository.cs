@@ -18,4 +18,6 @@ public interface ITrainerRepository
 	Task<bool> UpdateAsync(long trainerId, TrainerProfileRequestDto profile);
 
 	Task<bool> UpdateTrainingProgramsAsync(long trainerId, List<TrainingProgramRequestDto> trainingPrograms);
+
+	Task<List<string>> GetAllAddresses();
 }

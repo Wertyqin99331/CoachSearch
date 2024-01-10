@@ -118,4 +118,11 @@ public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadServic
 			return false;
 		}
 	}
+
+	public Task<List<string>> GetAllAddresses()
+	{
+		return dbContext.Trainers
+			.Select(t => t.Address)
+			.ToListAsync();
+	}
 }
