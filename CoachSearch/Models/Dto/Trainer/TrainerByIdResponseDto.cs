@@ -21,6 +21,8 @@ public class TrainerByIdResponseDto
 	public required string Specialization { get; set; } = null!;
 
 	public required int LikesCount { get; set; }
+	
+	public required bool IsLiked { get; set; }
 
 	public required string? AvatarUrl { get; set; }
 

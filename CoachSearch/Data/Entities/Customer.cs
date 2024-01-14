@@ -29,4 +29,6 @@ public class Customer
 	[ForeignKey("UserInfoId")] public virtual ApplicationUser UserInfo { get; set; } = null!;
 
 	public virtual List<Review> Reviews { get; set; } = null!;
+
+	public virtual List<Like> Likes { get; set; } = null!;
 }

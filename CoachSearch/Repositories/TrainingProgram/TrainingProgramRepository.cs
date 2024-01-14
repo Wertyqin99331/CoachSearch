@@ -5,16 +5,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoachSearch.Repositories.TrainingProgram;
 
-public class TrainingProgramRepository(ApplicationDbContext dbContext, ITrainerRepository trainerRepository): ITrainingProgramRepository
+public class TrainingProgramRepository: ITrainingProgramRepository
 {
+	private readonly ApplicationDbContext _dbContext;
+	private readonly ITrainerRepository _trainerRepository;
+
+	public TrainingProgramRepository(ApplicationDbContext dbContext, ITrainerRepository trainerRepository)
+	{
+		_dbContext = dbContext;
+		_trainerRepository = trainerRepository;
+	}
+	
 	public Task<Data.Entities.TrainingProgram?> GetByIdAsync(long trainingProgramId)
 	{
-		return dbContext.TrainingPrograms.FirstOrDefaultAsync(t => t.TrainingProgramId == trainingProgramId);
+		return _dbContext.TrainingPrograms.FirstOrDefaultAsync(t => t.TrainingProgramId == trainingProgramId);
 	}
 
 	public IQueryable<Data.Entities.TrainingProgram> GetAllByTrainerIdQueryable(long trainerId)
 	{
-		return dbContext.TrainingPrograms.Where(tp => tp.TrainerId == trainerId);
+		return _dbContext.TrainingPrograms.Where(tp => tp.TrainerId == trainerId);
 	}
 
 	public IQueryable<TrainingProgramDto> GetAllByTrainerIdToDto(long trainerId)
@@ -32,12 +41,12 @@ public class TrainingProgramRepository(ApplicationDbContext dbContext, ITrainerR
 	{
 		try
 		{
-			var trainer = await trainerRepository.GetByIdAsync(trainerId);
+			var trainer = await _trainerRepository.GetByIdAsync(trainerId);
 			if (trainer == null)
 				return false;
 		
 			trainer.TrainingPrograms.AddRange(programs);
-			await dbContext.SaveChangesAsync();
+			await _dbContext.SaveChangesAsync();
 			return true;
 		}
 		catch

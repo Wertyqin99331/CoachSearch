@@ -14,34 +14,50 @@ namespace CoachSearch.Controllers;
 
 [ApiController]
 [Route("/api/customer")]
-public class CustomerController(IUserService userService, 
-	UserManager<ApplicationUser> userManager,
-	ICustomerRepository customerRepository,
-	IFileUploadService fileUploadService) : Controller
+public class CustomerController: Controller
 {
+	public CustomerController(IUserService userService,
+		UserManager<ApplicationUser> userManager,
+		ICustomerRepository customerRepository,
+		IFileUploadService fileUploadService)
+	{
+		_userService = userService;
+		_userManager = userManager;
+		_customerRepository = customerRepository;
+		_fileUploadService = fileUploadService;
+	}
+
+	private readonly IUserService _userService;
+
+	private readonly UserManager<ApplicationUser> _userManager;
+
+	private readonly ICustomerRepository _customerRepository;
+
+	private readonly IFileUploadService _fileUploadService;
+
 	/// <summary>
 	/// Get a customer profile
 	/// </summary>
 	/// <returns></returns>
 	[Authorize(Roles = "Customer")]
 	[HttpGet("profile")]
-	[ProducesResponseType<CustomerProfileResponseDto>(StatusCodes.Status200OK)]
-	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(typeof(CustomerProfileResponseDto), StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(ResponseError), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[ProducesResponseType(StatusCodes.Status403Forbidden)]
 	public async Task<IActionResult> GetCustomerProfile()
 	{
-		var (email, phoneNumber) = userService.GetCredentials();
+		var (email, phoneNumber) = _userService.GetCredentials();
 
 		if (email is null && phoneNumber is null)
 			return BadRequest(new ResponseError("Can't read credentials from jwt"));
 
-		var user = await userManager.FindByCredentialsAsync(email, phoneNumber);
+		var user = await _userManager.FindByCredentialsAsync(email, phoneNumber);
 
 		if (user is null)
 			return BadRequest("There is no user with these credentials");
 
-		var userRole = userService.GetUserRole();
+		var userRole = _userService.GetUserRole();
 
 		if (userRole == UserRole.Customer)
 		{
@@ -59,7 +75,7 @@ public class CustomerController(IUserService userService,
 				Info = customerInfo.Info,
 				TelegramLink = customerInfo.TelegramLink,
 				VkLink = customerInfo.VkLink,
-				AvatarUrl = fileUploadService.GetAvatarUrl(Request, customerInfo.AvatarFileName)
+				AvatarUrl = _fileUploadService.GetAvatarUrl(Request, customerInfo.AvatarFileName)
 			});
 		}
 
@@ -74,17 +90,17 @@ public class CustomerController(IUserService userService,
 	[Authorize(Roles = "Customer")]
 	[HttpPost("profile")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
-	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(typeof(ResponseError), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[ProducesResponseType(StatusCodes.Status403Forbidden)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> UpdateCustomerProfile([FromBody] CustomerProfileRequestDto body)
 	{
-		var (email, phoneNumber) = userService.GetCredentials();
+		var (email, phoneNumber) = _userService.GetCredentials();
 		if (email == null && phoneNumber == null)
 			return BadRequest(new ResponseError("Can't read credentials from jwt"));
 
-		var user = await userManager.FindByCredentialsAsync(email, phoneNumber);
+		var user = await _userManager.FindByCredentialsAsync(email, phoneNumber);
 		if (user == null)
 			return BadRequest(new ResponseError("There is no user with these credentials"));
 
@@ -102,14 +118,14 @@ public class CustomerController(IUserService userService,
 				// Todo 
 			};
 
-			var result = await customerRepository.AddAsync(newCustomerInfo);
+			var result = await _customerRepository.AddAsync(newCustomerInfo);
 			return result
 				? NoContent()
 				: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 		}
 		else
 		{
-			var result = await customerRepository.UpdateAsync(customerInfo.CustomerId, body);
+			var result = await _customerRepository.UpdateAsync(customerInfo.CustomerId, body);
 			return result
 				? NoContent()
 				: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));

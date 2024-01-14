@@ -24,106 +24,58 @@ namespace CoachSearch.Controllers;
 [ApiController]
 [Route("api/auth")]
 [Produces("application/json")]
-public class AuthController(
-	UserManager<ApplicationUser> userManager,
-	RoleManager<IdentityRole<long>> roleManager,
-	ITokenService tokenService,
-	ICustomerRepository customerRepository, 
-	ITrainerRepository trainerRepository,
-	IUserService userService,
-	IFileUploadService fileUploadService) : Controller
+public class AuthController : Controller
 {
-	/*/// <summary>
-	/// Register a user
-	/// </summary>
-	/// <param name="body"></param>
-	/// <returns></returns>
-	[HttpPost("register")]
-	[ProducesResponseType<LoginResponseDto>(StatusCodes.Status200OK)]
-	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
-	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	[EndpointDescription("Register a user")]
-	public async Task<IActionResult> Register([FromBody] RegistrationRequestDto body)
+	public AuthController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<long>>  roleManager,
+		ITokenService tokenService, ICustomerRepository customerRepository, ITrainerRepository trainerRepository,
+		IUserService userService, IFileUploadService fileUploadService)
 	{
-		if (body.Email is null && body.PhoneNumber is null)
-			return BadRequest(new ResponseError("Not enough information to register"));
-		
-		if (body.Email is not null)
-		{
-			if (await userManager.FindByEmailAsync(body.Email) is not null)
-				return BadRequest(new ResponseError("User with this email already exists"));
-		}
-		
-		if (body.PhoneNumber is not null)
-		{
-			if (await userManager.FindByPhoneNumberAsync(body.PhoneNumber!) is not null)
-				return BadRequest(new ResponseError("User with this phone already exists"));
-		}
-		
-		var roleInString = body.UserRole.ToString();
-		if (await roleManager.FindByNameAsync(roleInString) is null)
-			return BadRequest(new ResponseError("There is no role with this name"));
+		_userManager = userManager;
+		_roleManager = roleManager;
+		_tokenService = tokenService;
+		_customerRepository = customerRepository;
+		_trainerRepository = trainerRepository;
+		_userService = userService;
+		_fileUploadService = fileUploadService;
+	}
 
-		var user = new ApplicationUser()
-		{
-			Email = body.Email,
-			PhoneNumber = body.PhoneNumber,
-			UserName = body.Email ?? body.PhoneNumber
-		};
+	private readonly UserManager<ApplicationUser> _userManager = null!;
+	private readonly RoleManager<IdentityRole<long>> _roleManager = null!;
+	private readonly ITokenService _tokenService = null!;
+	private readonly ICustomerRepository _customerRepository = null!;
+	private readonly ITrainerRepository _trainerRepository = null!;
+	private readonly IUserService _userService = null!;
+	private readonly IFileUploadService _fileUploadService;
 
-		var result = await userManager.CreateAsync(user, body.Password);
-
-		if (!result.Succeeded)
-			return StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
-		
-		var registeredUser = await userManager.FindByIdAsync(user.Id);
-		await userManager.AddToRoleAsync(registeredUser!, roleInString);
-
-		/*
-		if (body.UserRole == UserRole.Customer)
-		{
-			var customer = new Customer() { UserInfo = registeredUser! };
-			await customerRepository.AddAsync(customer);
-		}
-		else
-		{
-			var trainer = new Trainer() { UserInfo = registeredUser! };
-			await trainerRepository.AddAsync(trainer);
-		}#1#
-
-		return await Login(new LoginRequestDto()
-			{ Email = registeredUser?.Email, PhoneNumber = registeredUser?.PhoneNumber, Password = body.Password });
-	}*/
-	
 	/// <summary>
 	/// Register a customer
 	/// </summary>
 	/// <param name="body"></param>
 	/// <returns></returns>
 	[HttpPost("register/customer")]
-	[ProducesResponseType<LoginResponseDto>(StatusCodes.Status200OK)]
-	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(ResponseError), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	[EndpointDescription("Register a customer")]
 	public async Task<IActionResult> RegisterCustomer([FromForm] RegistrationCustomerRequestDto body)
 	{
 		if (body.Email is null && body.PhoneNumber is null)
 			return BadRequest(new ResponseError("Not enough information to register"));
-		
+
 		if (body.Email is not null)
 		{
-			if (await userManager.FindByEmailAsync(body.Email) is not null)
+			if (await _userManager.FindByEmailAsync(body.Email) is not null)
 				return BadRequest(new ResponseError("User with this email already exists"));
 		}
-		
-		if (body.PhoneNumber is not null)
+
+		if (body.PhoneNumber != null)
 		{
-			if (await userManager.FindByPhoneNumberAsync(body.PhoneNumber!) is not null)
+			if (await _userManager.FindByPhoneNumberAsync(body.PhoneNumber!) != null)
 				return BadRequest(new ResponseError("User with this phone already exists"));
 		}
 
 		const string roleInString = "Customer";
-		if (await roleManager.FindByNameAsync(roleInString) is null)
+		if (await _roleManager.FindByNameAsync(roleInString) is null)
 			return BadRequest(new ResponseError("There is no role with this name"));
 
 		var user = new ApplicationUser()
@@ -133,14 +85,14 @@ public class AuthController(
 			UserName = body.Email ?? body.PhoneNumber
 		};
 
-		var result = await userManager.CreateAsync(user, body.Password);
+		var result = await _userManager.CreateAsync(user, body.Password);
 
 		if (!result.Succeeded)
 			return StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
-		
-		var registeredUser = await userManager.FindByIdAsync(user.Id);
-		await userManager.AddToRoleAsync(registeredUser!, roleInString);
-		
+
+		var registeredUser = await _userManager.FindByIdAsync(user.Id);
+		await _userManager.AddToRoleAsync(registeredUser!, roleInString);
+
 		var registeredCustomer = new Customer()
 		{
 			FullName = body.FullName,
@@ -149,47 +101,47 @@ public class AuthController(
 			VkLink = body.VkLink,
 			UserInfo = registeredUser!,
 			AvatarFileName = body.Avatar == null
-			 ? null
-			 : await fileUploadService.UploadFileAsync(body.Avatar)
+				? null
+				: await _fileUploadService.UploadFileAsync(body.Avatar)
 		};
 
-		var customerAddingResult = await customerRepository.AddAsync(registeredCustomer);
+		var customerAddingResult = await _customerRepository.AddAsync(registeredCustomer);
 		if (!customerAddingResult)
 			return StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 
 		return await Login(new LoginRequestDto()
 			{ Login = body.Email ?? body.PhoneNumber!, Password = body.Password });
 	}
-	
+
 	/// <summary>
 	/// Register a trainer
 	/// </summary>ч
 	/// <param name="body"></param>
 	/// <returns></returns>
 	[HttpPost("register/trainer")]
-	[ProducesResponseType<LoginResponseDto>(StatusCodes.Status200OK)]
-	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(ResponseError), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	[EndpointDescription("Register a customer")]
 	public async Task<IActionResult> RegisterTrainer([FromForm] TrainerRegistrationRequestDto body)
 	{
 		if (body.Email is null && body.PhoneNumber is null)
 			return BadRequest(new ResponseError("Not enough information to register"));
-		
+
 		if (body.Email is not null)
 		{
-			if (await userManager.FindByEmailAsync(body.Email) is not null)
+			if (await _userManager.FindByEmailAsync(body.Email) is not null)
 				return BadRequest(new ResponseError("User with this email already exists"));
 		}
-		
+
 		if (body.PhoneNumber is not null)
 		{
-			if (await userManager.FindByPhoneNumberAsync(body.PhoneNumber!) is not null)
+			if (await _userManager.FindByPhoneNumberAsync(body.PhoneNumber)! is not null)
 				return BadRequest(new ResponseError("User with this phone already exists"));
 		}
 
 		const string roleInString = "Trainer";
-		if (await roleManager.FindByNameAsync(roleInString) is null)
+		if (await _roleManager.FindByNameAsync(roleInString) is null)
 			return BadRequest(new ResponseError("There is no role with this name"));
 
 		var user = new ApplicationUser()
@@ -199,14 +151,14 @@ public class AuthController(
 			UserName = body.Email ?? body.PhoneNumber
 		};
 
-		var result = await userManager.CreateAsync(user, body.Password);
+		var result = await _userManager.CreateAsync(user, body.Password);
 
 		if (!result.Succeeded)
 			return StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
-		
-		var registeredUser = await userManager.FindByIdAsync(user.Id);
-		await userManager.AddToRoleAsync(registeredUser!, roleInString);
-		
+
+		var registeredUser = await _userManager.FindByIdAsync(user.Id);
+		await _userManager.AddToRoleAsync(registeredUser!, roleInString);
+
 		var registeredTrainer = new Trainer()
 		{
 			FullName = body.FullName,
@@ -217,52 +169,52 @@ public class AuthController(
 			UserInfo = registeredUser!,
 			Specialization = body.Specialization,
 			AvatarFileName = body.Avatar == null
-			 ? null
-			 : await fileUploadService.UploadFileAsync(body.Avatar)
+				? null
+				: await _fileUploadService.UploadFileAsync(body.Avatar)
 		};
 
-		var trainerAddingResult = await trainerRepository.AddAsync(registeredTrainer);
+		var trainerAddingResult = await _trainerRepository.AddAsync(registeredTrainer);
 		if (!trainerAddingResult)
 			return StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 
 		return await Login(new LoginRequestDto()
 			{ Login = body.Email ?? body.PhoneNumber!, Password = body.Password });
 	}
-	
+
 	/// <summary>
 	/// Login by email and password
 	/// </summary>
 	/// <param name="body"></param>
 	/// <returns></returns>
 	[HttpPost("login")]
-	[ProducesResponseType<LoginResponseDto>(StatusCodes.Status200OK)]
-	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType( typeof(LoginResponseDto), StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(ResponseError), StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> Login([FromForm] LoginRequestDto body)
 	{
-		var email = new EmailAddressAttribute().IsValid(body.Login) 
-			? body.Login 
+		var email = new EmailAddressAttribute().IsValid(body.Login)
+			? body.Login
 			: null;
 		var phoneNumber = body.Login.Length == 11 && body.Login.All(char.IsNumber)
 			? body.Login
 			: null;
-		
-		var managedUser = await userManager.FindByCredentialsAsync(email, phoneNumber);
+
+		var managedUser = await _userManager.FindByCredentialsAsync(email, phoneNumber);
 
 		if (managedUser == null)
 			return BadRequest(new ResponseError("There is no user with these credentials"));
 
-		var isPasswordValid = await userManager.CheckPasswordAsync(managedUser, body.Password);
+		var isPasswordValid = await _userManager.CheckPasswordAsync(managedUser, body.Password);
 
 		if (!isPasswordValid)
 			return BadRequest(new ResponseError("Password was wrong"));
 
-		var userRoles = await userManager.GetRolesAsync(managedUser);
-		var jwtToken = tokenService.CreateToken(managedUser, userRoles);
+		var userRoles = await _userManager.GetRolesAsync(managedUser);
+		var jwtToken = _tokenService.CreateToken(managedUser, userRoles);
 
 		return Ok(new LoginResponseDto()
 		{
 			Token = jwtToken,
-			Role = managedUser.Trainer != null 
+			Role = managedUser.Trainer != null
 				? UserRole.Trainer.ToString()
 				: UserRole.Customer.ToString()
 		});
@@ -279,17 +231,17 @@ public class AuthController(
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDto body)
 	{
-		var (email, phoneNumber) = userService.GetCredentials();
-		var user = await userManager.FindByCredentialsAsync(email, phoneNumber);
+		var (email, phoneNumber) = _userService.GetCredentials();
+		var user = await _userManager.FindByCredentialsAsync(email, phoneNumber);
 
 		if (user is null)
 			return BadRequest(new ResponseError("There is no user with these credentials"));
 
-		var changeResult = await userManager.ChangePasswordAsync(user, body.CurrentPassword, body.NewPassword);
+		var changeResult = await _userManager.ChangePasswordAsync(user, body.CurrentPassword, body.NewPassword);
 
 		if (changeResult.Succeeded)
 			return Ok();
-		
+
 		return BadRequest(new ResponseError("Something goes wrong"));
 	}
 }

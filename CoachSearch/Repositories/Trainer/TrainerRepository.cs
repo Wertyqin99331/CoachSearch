@@ -9,24 +9,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoachSearch.Repositories.Trainer;
 
-public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadService fileUploadService): ITrainerRepository
+public class TrainerRepository: ITrainerRepository
 {
+	private readonly ApplicationDbContext _dbContext;
+	private readonly IFileUploadService _fileUploadService;
+
+	public TrainerRepository(ApplicationDbContext dbContext, IFileUploadService fileUploadService)
+	{
+		this._dbContext = dbContext;
+		this._fileUploadService = fileUploadService;
+	}
+	
 	public Task SaveChangesAsync()
 	{
-		return dbContext.SaveChangesAsync();
+		return _dbContext.SaveChangesAsync();
 	}
 
 	public Task<Data.Entities.Trainer?> GetByIdAsync(long id)
 	{
-		return dbContext.Trainers.FirstOrDefaultAsync(t => t.TrainerId == id);
+		return _dbContext.Trainers.FirstOrDefaultAsync(t => t.TrainerId == id);
 	}
 
 	public async Task<bool> AddAsync(Data.Entities.Trainer trainer)
 	{
 		try
 		{
-			await dbContext.Trainers.AddAsync(trainer);
-			await dbContext.SaveChangesAsync();
+			await _dbContext.Trainers.AddAsync(trainer);
+			await _dbContext.SaveChangesAsync();
 			return true;
 		}
 		catch
@@ -39,13 +48,13 @@ public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadServic
 	{
 		try
 		{
-			var trainer = await dbContext.Trainers.FirstOrDefaultAsync(t => t.TrainerId == id);
+			var trainer = await _dbContext.Trainers.FirstOrDefaultAsync(t => t.TrainerId == id);
 
 			if (trainer == null)
 				return false;
 			
 			pathTrainerDto.ApplyTo(trainer);
-			await dbContext.SaveChangesAsync();
+			await _dbContext.SaveChangesAsync();
 			return true;
 		}
 		catch
@@ -56,14 +65,14 @@ public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadServic
 
 	public IQueryable<Data.Entities.Trainer> GetAllByQuery()
 	{
-		return dbContext.Trainers;
+		return _dbContext.Trainers;
 	}
 
 	public async Task<bool> UpdateAsync(long trainerId, TrainerProfileRequestDto profile)
 	{
 		try
 		{
-			var trainer = await dbContext.Trainers.FirstOrDefaultAsync(t => t.TrainerId == trainerId);
+			var trainer = await _dbContext.Trainers.FirstOrDefaultAsync(t => t.TrainerId == trainerId);
 
 			if (trainer == null)
 				return false;
@@ -81,13 +90,13 @@ public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadServic
 			trainer.VkLink = profile.VkLink;
 			
 			if (trainer.AvatarFileName != null)
-				fileUploadService.DeleteFile(trainer.AvatarFileName);
+				_fileUploadService.DeleteFile(trainer.AvatarFileName);
 
 			trainer.AvatarFileName = profile.Avatar != null
-				? await fileUploadService.UploadFileAsync(profile.Avatar)
+				? await _fileUploadService.UploadFileAsync(profile.Avatar)
 				: null;
 			
-			await dbContext.SaveChangesAsync();
+			await _dbContext.SaveChangesAsync();
 			return true;
 		}
 		catch
@@ -100,7 +109,7 @@ public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadServic
 	{
 		try
 		{
-			var trainer = await dbContext.Trainers.FirstOrDefaultAsync(t => t.TrainerId == trainerId);
+			var trainer = await _dbContext.Trainers.FirstOrDefaultAsync(t => t.TrainerId == trainerId);
 			if (trainer == null)
 				return false;
 
@@ -110,7 +119,7 @@ public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadServic
 				TrainingProgramPrice = t.TrainingProgramPrice
 			}).ToList();
 
-			await dbContext.SaveChangesAsync();
+			await _dbContext.SaveChangesAsync();
 			return true;
 		}
 		catch
@@ -121,7 +130,7 @@ public class TrainerRepository(ApplicationDbContext dbContext, IFileUploadServic
 
 	public Task<List<string>> GetAllAddresses()
 	{
-		return dbContext.Trainers
+		return _dbContext.Trainers
 			.Select(t => t.Address)
 			.ToListAsync();
 	}

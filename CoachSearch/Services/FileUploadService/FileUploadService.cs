@@ -1,10 +1,17 @@
 ﻿namespace CoachSearch.Services.FileUploadService;
 
-public class FileUploadService(IWebHostEnvironment webHostEnvironment): IFileUploadService
+public class FileUploadService: IFileUploadService
 {
+	private readonly IWebHostEnvironment _webHostEnvironment;
+
+	public FileUploadService(IWebHostEnvironment webHostEnvironment)
+	{
+		_webHostEnvironment = webHostEnvironment;
+	}
+
 	public async Task<string> UploadFileAsync(IFormFile file)
 	{
-		var folderPath = Path.Combine(webHostEnvironment.ContentRootPath, "Images");
+		var folderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images");
 		if (!Directory.Exists(folderPath))
 			Directory.CreateDirectory(folderPath);
 
@@ -20,7 +27,7 @@ public class FileUploadService(IWebHostEnvironment webHostEnvironment): IFileUpl
 
 	public void DeleteFile(string fileName)
 	{
-		var filePath = Path.Combine(webHostEnvironment.ContentRootPath, "Images", fileName);
+		var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", fileName);
 		
 		if (File.Exists(filePath))
 			File.Delete(filePath);

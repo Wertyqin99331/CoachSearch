@@ -5,8 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoachSearch.Repositories.Customer;
 
-public class CustomerRepository(ApplicationDbContext dbContext): ICustomerRepository
+public class CustomerRepository: ICustomerRepository
 {
+	private ApplicationDbContext dbContext;
+	public CustomerRepository(ApplicationDbContext dbContext)
+	{
+		this.dbContext = dbContext;
+	}
+	
 	public async Task<bool> AddAsync(Data.Entities.Customer customer)
 	{
 		try

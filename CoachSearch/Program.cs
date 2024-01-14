@@ -28,7 +28,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
 	options
-		.UseNpgsql(builder.Configuration.GetConnectionString("Db"))
+		.UseSqlServer(builder.Configuration.GetConnectionString("Db"))
+		/*.UseNpgsql(builder.Configuration.GetConnectionString("Db"))*/
 		.UseLazyLoadingProxies();
 });
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<long>>(options =>
@@ -121,6 +122,10 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+var folderPath = Path.Combine(builder.Environment.ContentRootPath, "Images");
+if (!Directory.Exists(folderPath))
+	Directory.CreateDirectory(folderPath);
 
 app.UseStaticFiles(new StaticFileOptions
 {

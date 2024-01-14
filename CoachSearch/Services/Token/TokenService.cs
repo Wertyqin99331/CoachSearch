@@ -9,8 +9,15 @@ using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegiste
 
 namespace CoachSearch.Services.Token;
 
-public class TokenService(IConfiguration configuration): ITokenService
+public class TokenService: ITokenService
 {
+	private readonly IConfiguration _configuration;
+
+	public TokenService(IConfiguration configuration)
+	{
+		this._configuration = configuration;
+	}
+
 	public string CreateToken(ApplicationUser user, IEnumerable<string> roles)
 	{
 		var claims = new List<Claim>
@@ -21,12 +28,12 @@ public class TokenService(IConfiguration configuration): ITokenService
 			new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
 		};
 
-		var signInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!));
+		var signInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]!));
 		var signInCredentials = new SigningCredentials(signInKey, SecurityAlgorithms.HmacSha256);
 
 		var jwt = new JwtSecurityToken(
-			issuer: configuration["Jwt:Issuer"],
-			audience: configuration["Jwt:Audience"],
+			issuer: _configuration["Jwt:Issuer"],
+			audience: _configuration["Jwt:Audience"],
 			claims: claims,
 			expires: DateTime.UtcNow.Add(TimeSpan.FromDays(1)),
 			notBefore: DateTime.Now,

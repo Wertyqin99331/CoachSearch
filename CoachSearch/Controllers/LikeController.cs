@@ -14,13 +14,24 @@ namespace CoachSearch.Controllers;
 
 [ApiController]
 [Route("api/like")]
-public class LikeController(
-	IUserService userService,
-	UserManager<ApplicationUser> userManager,
-	ITrainerRepository trainerRepository,
-	ILikeRepository likeRepository,
-	ICustomerRepository customerRepository) : Controller
+public class LikeController : Controller
 {
+	public LikeController(
+		IUserService userService,
+		UserManager<ApplicationUser> userManager,
+		ITrainerRepository trainerRepository,
+		ILikeRepository likeRepository)
+	{
+		_userService = userService;
+		_userManager = userManager;
+		_trainerRepository = trainerRepository;
+		_likeRepository = likeRepository;
+	}
+	
+	private readonly IUserService _userService;
+	private readonly UserManager<ApplicationUser> _userManager;
+	private readonly ITrainerRepository _trainerRepository;
+	private readonly ILikeRepository _likeRepository;
 	/// <summary>
 	/// Toggle user like to a trainer
 	/// </summary>
@@ -29,15 +40,15 @@ public class LikeController(
 	[Authorize(Roles = "Customer")]
 	[HttpPost]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
-	[ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
-	[ProducesResponseType<ResponseError>(StatusCodes.Status500InternalServerError)]
+	[ProducesResponseType(typeof(ResponseError), StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(typeof(ResponseError), StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> ToggleLike([FromBody] ToggleLikeRequestDto body)
 	{
-		var (email, phoneNumber) = userService.GetCredentials();
+		var (email, phoneNumber) = _userService.GetCredentials();
 		if (email == null && phoneNumber == null)
 			return BadRequest(new ResponseError("No email and phone number in your jwt"));
 
-		var user = await userManager.FindByCredentialsAsync(email, phoneNumber);
+		var user = await _userManager.FindByCredentialsAsync(email, phoneNumber);
 		if (user == null)
 			return BadRequest(new ResponseError("There is no user with these credentials"));
 
@@ -45,11 +56,11 @@ public class LikeController(
 		if (customer == null)
 			return BadRequest(new ResponseError("There is no customer associated with this user"));
 
-		var trainer = await trainerRepository.GetByIdAsync(body.TrainerId);
+		var trainer = await _trainerRepository.GetByIdAsync(body.TrainerId);
 		if (trainer == null)
 			return BadRequest(new ResponseError("There is no trainer with this id)"));
 
-		var result = await likeRepository.ToggleLike(customer, trainer);
+		var result = await _likeRepository.ToggleLike(customer, trainer);
 		return result
 			? NoContent()
 			: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));

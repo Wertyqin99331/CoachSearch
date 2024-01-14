@@ -2,6 +2,6 @@
 
 public interface IReviewRepository
 {
-	public Task<bool> AddReviewAsync(string reviewTitle, string reviewText, DateOnly reviewDate,
+	public Task<Data.Entities.Review?> AddReviewAsync(string reviewText, DateTime reviewDate,
 		Data.Entities.Customer customer, Data.Entities.Trainer trainer);
 }

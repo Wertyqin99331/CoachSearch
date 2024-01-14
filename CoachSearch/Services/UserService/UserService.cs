@@ -3,8 +3,15 @@ using CoachSearch.Models.Enums;
 
 namespace CoachSearch.Services.UserService;
 
-public class UserService(IHttpContextAccessor httpContextAccessor): IUserService
+public class UserService: IUserService
 {
+	private readonly IHttpContextAccessor _httpContextAccessor;
+
+	public UserService(IHttpContextAccessor httpContextAccessor)
+	{
+		this._httpContextAccessor = httpContextAccessor;
+	}
+
 	public string? GetMyEmail()
 	{
 		return GetClaimValue(ClaimTypes.Email);
@@ -22,8 +29,8 @@ public class UserService(IHttpContextAccessor httpContextAccessor): IUserService
 
 	public UserRole? GetUserRole()
 	{
-		if (httpContextAccessor.HttpContext is null) return null;
-		var roleInString = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
+		if (_httpContextAccessor.HttpContext is null) return null;
+		var roleInString = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
 		if (Enum.TryParse(roleInString, true, out UserRole parseResult))
 			return parseResult;
 
@@ -34,8 +41,8 @@ public class UserService(IHttpContextAccessor httpContextAccessor): IUserService
 	{
 		string? result = null;
 
-		if (httpContextAccessor.HttpContext is not null)
-			result = httpContextAccessor.HttpContext.User.FindFirstValue(claimType);
+		if (_httpContextAccessor.HttpContext is not null)
+			result = _httpContextAccessor.HttpContext.User.FindFirstValue(claimType);
 
 		return result == string.Empty ? null : result;
 	}

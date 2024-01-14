@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CoachSearch")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8410b07609f6793db2f62d6bf41e106d23124009")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fcc9a190296dd61b3686074a22382e7551a99d27")]
 [assembly: System.Reflection.AssemblyProductAttribute("CoachSearch")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CoachSearch")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

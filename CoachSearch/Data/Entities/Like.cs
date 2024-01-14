@@ -20,6 +20,17 @@ public class LikeEntityConfiguration: IEntityTypeConfiguration<Like>
 {
 	public void Configure(EntityTypeBuilder<Like> builder)
 	{
-		builder.HasKey(l => new { l.CustomerId, l.TrainerId });
+		builder
+			.HasKey(l => new { l.CustomerId, l.TrainerId });
+		
+		builder
+			.HasOne(l => l.Trainer)
+			.WithMany(t => t.Likes)
+			.OnDelete(DeleteBehavior.Restrict);
+		
+		builder
+			.HasOne(l => l.Customer)
+			.WithMany(c => c.Likes)
+			.OnDelete(DeleteBehavior.Restrict);
 	}
 }

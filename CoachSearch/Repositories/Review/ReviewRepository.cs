@@ -2,27 +2,33 @@
 
 namespace CoachSearch.Repositories.Review;
 
-public class ReviewRepository(ApplicationDbContext dbContext): IReviewRepository
+public class ReviewRepository: IReviewRepository
 {
-	public async Task<bool> AddReviewAsync(string reviewTitle, string reviewText, DateOnly reviewDate, Data.Entities.Customer customer, Data.Entities.Trainer trainer)
+	private readonly ApplicationDbContext _dbContext;
+
+	public ReviewRepository(ApplicationDbContext dbContext)
+	{
+		this._dbContext = dbContext;
+	}
+	
+	public async Task<Data.Entities.Review?> AddReviewAsync(string reviewText, DateTime reviewDate, Data.Entities.Customer customer, Data.Entities.Trainer trainer)
 	{
 		try
 		{
 			var newReview = new Data.Entities.Review()
 			{
-				ReviewTitle = reviewTitle,
 				ReviewText = reviewText,
 				ReviewDate = reviewDate,
 				Customer = customer,
 				Trainer = trainer
 			};
-			await dbContext.Reviews.AddAsync(newReview);
-			await dbContext.SaveChangesAsync();
-			return true;
+			var result = await _dbContext.Reviews.AddAsync(newReview);
+			await _dbContext.SaveChangesAsync();
+			return result.Entity;
 		}
 		catch
 		{
-			return false;
+			return null;
 		}
 	}
 }
