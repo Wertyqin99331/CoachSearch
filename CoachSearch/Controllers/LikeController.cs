@@ -22,10 +22,10 @@ public class LikeController : Controller
 		ITrainerRepository trainerRepository,
 		ILikeRepository likeRepository)
 	{
-		_userService = userService;
-		_userManager = userManager;
-		_trainerRepository = trainerRepository;
-		_likeRepository = likeRepository;
+		this._userService = userService;
+		this._userManager = userManager;
+		this._trainerRepository = trainerRepository;
+		this._likeRepository = likeRepository;
 	}
 	
 	private readonly IUserService _userService;
@@ -44,11 +44,11 @@ public class LikeController : Controller
 	[ProducesResponseType(typeof(ResponseError), StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> ToggleLike([FromBody] ToggleLikeRequestDto body)
 	{
-		var (email, phoneNumber) = _userService.GetCredentials();
+		var (email, phoneNumber) = this._userService.GetCredentials();
 		if (email == null && phoneNumber == null)
 			return BadRequest(new ResponseError("No email and phone number in your jwt"));
 
-		var user = await _userManager.FindByCredentialsAsync(email, phoneNumber);
+		var user = await this._userManager.FindByCredentialsAsync(email, phoneNumber);
 		if (user == null)
 			return BadRequest(new ResponseError("There is no user with these credentials"));
 
@@ -56,11 +56,11 @@ public class LikeController : Controller
 		if (customer == null)
 			return BadRequest(new ResponseError("There is no customer associated with this user"));
 
-		var trainer = await _trainerRepository.GetByIdAsync(body.TrainerId);
+		var trainer = await this._trainerRepository.GetByIdAsync(body.TrainerId);
 		if (trainer == null)
 			return BadRequest(new ResponseError("There is no trainer with this id)"));
 
-		var result = await _likeRepository.ToggleLike(customer, trainer);
+		var result = await this._likeRepository.ToggleLike(customer, trainer);
 		return result
 			? NoContent()
 			: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));

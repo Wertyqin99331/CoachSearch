@@ -14,7 +14,7 @@ public sealed class ApplicationDbContext
 	
 	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options)
 	{
-		Database.Migrate();
+		this.Database.Migrate();
 	}
 	
 	public DbSet<Customer> Customers { get; set; } = null!;

@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Text;
-using CoachSearch.Congiguration;
 using CoachSearch.Data;
 using CoachSearch.Data.Entities;
 using CoachSearch.Repositories.Customer;
@@ -28,8 +27,10 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
 	options
+		/*
 		.UseSqlServer(builder.Configuration.GetConnectionString("Db"))
-		/*.UseNpgsql(builder.Configuration.GetConnectionString("Db"))*/
+		*/
+		.UseNpgsql(builder.Configuration.GetConnectionString("Db"))
 		.UseLazyLoadingProxies();
 });
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<long>>(options =>
@@ -73,7 +74,6 @@ builder.Services.AddScoped<ITrainerRepository, TrainerRepository>();
 builder.Services.AddScoped<ITrainingProgramRepository, TrainingProgramRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<ILikeRepository, LikeRepository>();
-builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>

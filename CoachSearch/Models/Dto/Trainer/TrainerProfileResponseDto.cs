@@ -1,7 +1,7 @@
 ﻿using CoachSearch.Models.Dto.Review;
 using CoachSearch.Models.Dto.TrainerProgram;
 
-namespace CoachSearch.Models.Dto.ProfileDto;
+namespace CoachSearch.Models.Dto.Customer;
 
 public class TrainerProfileResponseDto
 {

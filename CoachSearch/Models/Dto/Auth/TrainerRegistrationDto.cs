@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CoachSearch.Data.Entities;
 using CoachSearch.Models.Enums;
+using CoachSearch.Services.FileUploadService;
 
-namespace CoachSearch.Models.Dto.Review;
+namespace CoachSearch.Models.Dto.Auth;
 
-public class TrainerRegistrationRequestDto
+public class TrainerRegistrationDto
 {
 	[EmailAddress] 
 	public string? Email { get; set; } = null!;
@@ -35,4 +37,22 @@ public class TrainerRegistrationRequestDto
 	public string? TelegramLink { get; set; }
 	
 	public IFormFile? Avatar { get; set; }
+
+
+	public async Task<Data.Entities.Trainer> ToTrainer(ApplicationUser user, IFileUploadService fileUploadService)
+	{
+		return new Data.Entities.Trainer()
+		{
+			FullName = this.FullName,
+			Info = this.Info,
+			Address = this.Address,
+			TelegramLink = this.TelegramLink,
+			VkLink = this.VkLink,
+			UserInfo = user,
+			Specialization = this.Specialization,
+			AvatarFileName = this.Avatar == null
+				? null
+				: await fileUploadService.UploadFileAsync(this.Avatar)
+		};
+	}
 }

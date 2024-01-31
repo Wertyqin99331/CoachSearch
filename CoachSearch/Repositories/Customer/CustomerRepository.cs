@@ -1,5 +1,5 @@
 ﻿using CoachSearch.Data;
-using CoachSearch.Models.Dto.ProfileDto;
+using CoachSearch.Models.Dto.Customer;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,18 +7,19 @@ namespace CoachSearch.Repositories.Customer;
 
 public class CustomerRepository: ICustomerRepository
 {
-	private ApplicationDbContext dbContext;
+	private readonly ApplicationDbContext _dbContext;
+	
 	public CustomerRepository(ApplicationDbContext dbContext)
 	{
-		this.dbContext = dbContext;
+		this._dbContext = dbContext;
 	}
 	
 	public async Task<bool> AddAsync(Data.Entities.Customer customer)
 	{
 		try
 		{
-			await dbContext.Customers.AddAsync(customer);
-			await dbContext.SaveChangesAsync();
+			await this._dbContext.Customers.AddAsync(customer);
+			await this._dbContext.SaveChangesAsync();
 			return true;
 		}
 		catch
@@ -31,13 +32,13 @@ public class CustomerRepository: ICustomerRepository
 	{
 		try
 		{
-			var customer = await dbContext.Customers.FirstOrDefaultAsync(c => c.CustomerId == id);
+			var customer = await this._dbContext.Customers.FirstOrDefaultAsync(c => c.CustomerId == id);
 
 			if (customer == null)
 				return false;
 			
 			patchCustomerDto.ApplyTo(customer);
-			await dbContext.SaveChangesAsync();
+			await this._dbContext.SaveChangesAsync();
 			return true;
 		}
 		catch
@@ -46,11 +47,31 @@ public class CustomerRepository: ICustomerRepository
 		}
 	}
 
-	public async Task<bool> UpdateAsync(long customerId, CustomerProfileRequestDto profile)
+	public async Task<bool> UpdateAsync(Data.Entities.Customer customer)
 	{
 		try
 		{
-			var customer = await dbContext.Customers.FirstOrDefaultAsync(t => t.CustomerId == customerId);
+			var existingCustomer =
+				await this._dbContext.Customers.FirstOrDefaultAsync(c => c.CustomerId == customer.CustomerId);
+			
+			if (existingCustomer == null)
+				return false;
+			
+			this._dbContext.Customers.Entry(existingCustomer).CurrentValues.SetValues(customer);
+			await this._dbContext.SaveChangesAsync();
+			return true;
+		}
+		catch
+		{
+			return false;
+		}
+	}
+
+	/*public async Task<bool> UpdateAsync(long customerId, CustomerProfileUpdateDto profile)
+	{
+		try
+		{
+			var customer = await this._dbContext.Customers.FirstOrDefaultAsync(t => t.CustomerId == customerId);
 
 			if (customer == null)
 				return false;
@@ -60,12 +81,12 @@ public class CustomerRepository: ICustomerRepository
 			customer.VkLink = profile.VkLink;
 			customer.TelegramLink = profile.TelegramLink;
 
-			await dbContext.SaveChangesAsync();
+			await this._dbContext.SaveChangesAsync();
 			return true;
 		}
 		catch
 		{
 			return false;
 		}
-	}
+	}*/
 }

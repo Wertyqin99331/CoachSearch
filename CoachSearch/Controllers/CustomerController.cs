@@ -1,7 +1,7 @@
 ﻿using CoachSearch.Data.Entities;
 using CoachSearch.Extensions;
 using CoachSearch.Models;
-using CoachSearch.Models.Dto.ProfileDto;
+using CoachSearch.Models.Dto.Customer;
 using CoachSearch.Models.Enums;
 using CoachSearch.Repositories.Customer;
 using CoachSearch.Services.FileUploadService;
@@ -14,17 +14,17 @@ namespace CoachSearch.Controllers;
 
 [ApiController]
 [Route("/api/customer")]
-public class CustomerController: Controller
+public class CustomerController : Controller
 {
 	public CustomerController(IUserService userService,
 		UserManager<ApplicationUser> userManager,
 		ICustomerRepository customerRepository,
 		IFileUploadService fileUploadService)
 	{
-		_userService = userService;
-		_userManager = userManager;
-		_customerRepository = customerRepository;
-		_fileUploadService = fileUploadService;
+		this._userService = userService;
+		this._userManager = userManager;
+		this._customerRepository = customerRepository;
+		this._fileUploadService = fileUploadService;
 	}
 
 	private readonly IUserService _userService;
@@ -41,47 +41,33 @@ public class CustomerController: Controller
 	/// <returns></returns>
 	[Authorize(Roles = "Customer")]
 	[HttpGet("profile")]
-	[ProducesResponseType(typeof(CustomerProfileResponseDto), StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(CustomerProfileDto), StatusCodes.Status200OK)]
 	[ProducesResponseType(typeof(ResponseError), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[ProducesResponseType(StatusCodes.Status403Forbidden)]
 	public async Task<IActionResult> GetCustomerProfile()
 	{
-		var (email, phoneNumber) = _userService.GetCredentials();
+		var (email, phoneNumber) = this._userService.GetCredentials();
 
-		if (email is null && phoneNumber is null)
+		if (email == null && phoneNumber == null)
 			return BadRequest(new ResponseError("Can't read credentials from jwt"));
 
-		var user = await _userManager.FindByCredentialsAsync(email, phoneNumber);
+		var user = await this._userManager.FindByCredentialsAsync(email, phoneNumber);
 
-		if (user is null)
+		if (user == null)
 			return BadRequest("There is no user with these credentials");
 
-		var userRole = _userService.GetUserRole();
+		var userRole = this._userService.GetUserRole();
 
-		if (userRole == UserRole.Customer)
-		{
-			var customerInfo = user.Customer;
+		if (userRole != UserRole.Customer) return BadRequest(new ResponseError("Can't read user role from jwt"));
+		var customerInfo = user.Customer;
 
-			if (customerInfo == null)
-				return BadRequest(new ResponseError("There is no customer associated with user"));
+		if (customerInfo == null)
+			return BadRequest(new ResponseError("There is no customer associated with user"));
 
-			return Ok(new CustomerProfileResponseDto()
-			{
-				CustomerId = customerInfo.CustomerId,
-				Email = user.Email,
-				PhoneNumber = user.PhoneNumber,
-				FullName = customerInfo.FullName,
-				Info = customerInfo.Info,
-				TelegramLink = customerInfo.TelegramLink,
-				VkLink = customerInfo.VkLink,
-				AvatarUrl = _fileUploadService.GetAvatarUrl(Request, customerInfo.AvatarFileName)
-			});
-		}
-
-		return BadRequest(new ResponseError("Can't read user role from jwt"));
+		return Ok(CustomerProfileDto.FromCustomer(customerInfo, user, this._fileUploadService, this.Request));
 	}
-	
+
 	/// <summary>
 	/// Update a customer profile
 	/// </summary>
@@ -94,41 +80,23 @@ public class CustomerController: Controller
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[ProducesResponseType(StatusCodes.Status403Forbidden)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> UpdateCustomerProfile([FromBody] CustomerProfileRequestDto body)
+	public async Task<IActionResult> UpdateCustomerProfile([FromForm] CustomerProfileUpdateDto body)
 	{
-		var (email, phoneNumber) = _userService.GetCredentials();
+		var (email, phoneNumber) = this._userService.GetCredentials();
 		if (email == null && phoneNumber == null)
 			return BadRequest(new ResponseError("Can't read credentials from jwt"));
 
-		var user = await _userManager.FindByCredentialsAsync(email, phoneNumber);
+		var user = await this._userManager.FindByCredentialsAsync(email, phoneNumber);
 		if (user == null)
 			return BadRequest(new ResponseError("There is no user with these credentials"));
 
 		var customerInfo = user.Customer;
 		if (customerInfo == null)
-		{
-			var newCustomerInfo = new Customer()
-			{
-				FullName = body.FullName,
-				UserInfo = user,
-				Info = body.Info,
-				TelegramLink = body.TelegramLink,
-				VkLink = body.VkLink,
-				AvatarFileName = null
-				// Todo 
-			};
+			return BadRequest(new ResponseError("There is no customer associated with this user"));
 
-			var result = await _customerRepository.AddAsync(newCustomerInfo);
-			return result
-				? NoContent()
-				: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
-		}
-		else
-		{
-			var result = await _customerRepository.UpdateAsync(customerInfo.CustomerId, body);
-			return result
-				? NoContent()
-				: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
-		}
+		var result = await this._customerRepository.UpdateAsync(await body.ToCustomer(customerInfo, this._fileUploadService));
+		return result
+			? NoContent()
+			: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 	}
 }

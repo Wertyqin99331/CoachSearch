@@ -11,7 +11,7 @@ public class FileUploadService: IFileUploadService
 
 	public async Task<string> UploadFileAsync(IFormFile file)
 	{
-		var folderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images");
+		var folderPath = Path.Combine(this._webHostEnvironment.ContentRootPath, "Images");
 		if (!Directory.Exists(folderPath))
 			Directory.CreateDirectory(folderPath);
 
@@ -27,7 +27,7 @@ public class FileUploadService: IFileUploadService
 
 	public void DeleteFile(string fileName)
 	{
-		var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Images", fileName);
+		var filePath = Path.Combine(this._webHostEnvironment.ContentRootPath, "Images", fileName);
 		
 		if (File.Exists(filePath))
 			File.Delete(filePath);

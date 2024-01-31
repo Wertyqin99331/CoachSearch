@@ -2,7 +2,7 @@
 using CoachSearch.Extensions;
 using CoachSearch.Models;
 using CoachSearch.Models.Dto;
-using CoachSearch.Models.Dto.ProfileDto;
+using CoachSearch.Models.Dto.Customer;
 using CoachSearch.Models.Dto.Review;
 using CoachSearch.Models.Dto.Trainer;
 using CoachSearch.Models.Enums;
@@ -25,11 +25,11 @@ public class TrainerController: Controller
 
 	public TrainerController(ITrainerRepository trainerRepository, ITrainingProgramRepository trainingProgramRepository, IUserService userService, UserManager<ApplicationUser> userManager, IFileUploadService fileUploadService)
 	{
-		_trainerRepository = trainerRepository;
-		_trainingProgramRepository = trainingProgramRepository;
-		_userService = userService;
-		_userManager = userManager;
-		_fileUploadService = fileUploadService;
+		this._trainerRepository = trainerRepository;
+		this._trainingProgramRepository = trainingProgramRepository;
+		this._userService = userService;
+		this._userManager = userManager;
+		this._fileUploadService = fileUploadService;
 	}
 
 	private readonly ITrainerRepository _trainerRepository;
@@ -44,7 +44,7 @@ public class TrainerController: Controller
 	/// <param name="city">City of the trainer</param>
 	/// <returns></returns>
 	[HttpGet]
-	[ProducesResponseType(typeof(List<AllTrainersResponseDto>),StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(List<AllTrainerDto>),StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> GetTrainers()
 	{
@@ -58,16 +58,16 @@ public class TrainerController: Controller
 		var (email, phoneNumber) = _userService.GetCredentials();
 		var currentUser = email == null && phoneNumber == null
 			? null
-			: await _userManager.FindByCredentialsAsync(email, phoneNumber);
+			: await this._userManager.FindByCredentialsAsync(email, phoneNumber);
 		
 		
 		var result = await trainerQuery
-			.Select(t => new AllTrainersResponseDto()
+			.Select(t => new AllTrainerDto()
 			{
 				TrainerId = t.TrainerId,
 				FullName = t.FullName,
 				Address = t.Address,
-				AvatarUrl = _fileUploadService.GetAvatarUrl(Request, t.AvatarFileName),
+				AvatarUrl = this._fileUploadService.GetAvatarUrl(this.Request, t.AvatarFileName),
 				Specialization = t.Specialization,
 				LikesCount = t.Likes.Count,
 				IsLiked = currentUser != null 
@@ -88,15 +88,15 @@ public class TrainerController: Controller
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> GetTrainerById(long id)
 	{
-		var trainer = await _trainerRepository.GetByIdAsync(id);
+		var trainer = await this._trainerRepository.GetByIdAsync(id);
 
 		if (trainer == null)
 			return BadRequest(new ResponseError("There is no trainer with this id"));
 		
-		var (email, phoneNumber) = _userService.GetCredentials();
+		var (email, phoneNumber) = this._userService.GetCredentials();
 		var currentUser = email == null && phoneNumber == null
 			? null
-			: await _userManager.FindByCredentialsAsync(email, phoneNumber);
+			: await this._userManager.FindByCredentialsAsync(email, phoneNumber);
 
 		var result = new TrainerByIdResponseDto()
 		{
@@ -118,7 +118,7 @@ public class TrainerController: Controller
 				ReviewDate = r.ReviewDate,
 				ReviewText = r.ReviewText,
 				CustomerName = r.Customer.FullName,
-				AvatarUrl = _fileUploadService.GetAvatarUrl(Request, r.Customer.AvatarFileName)
+				AvatarUrl = this._fileUploadService.GetAvatarUrl(this.Request, r.Customer.AvatarFileName)
 			}).ToList(),
 			LikesCount = trainer.Likes.Count,
 			IsLiked = currentUser != null && currentUser.Customer != null && trainer.Likes.Any(l => l.CustomerId == currentUser.Customer.CustomerId)

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CoachSearch.Congiguration;
 using CoachSearch.Data;
 using CoachSearch.Models.Dto;
 using CoachSearch.Models.Dto.TrainerProgram;

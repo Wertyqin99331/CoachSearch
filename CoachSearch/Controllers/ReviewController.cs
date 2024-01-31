@@ -23,11 +23,11 @@ public class ReviewController : Controller
 		IReviewRepository reviewRepository,
 		IFileUploadService fileUploadService)
 	{
-		_userService = userService;
-		_userManager = userManager;
-		_trainerRepository = trainerRepository;
-		_reviewRepository = reviewRepository;
-		_fileUploadService = fileUploadService;
+		this._userService = userService;
+		this._userManager = userManager;
+		this._trainerRepository = trainerRepository;
+		this._reviewRepository = reviewRepository;
+		this._fileUploadService = fileUploadService;
 	}
 	
 	private readonly IUserService _userService;
@@ -47,11 +47,11 @@ public class ReviewController : Controller
 	[ProducesResponseType(typeof(ResponseError), StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> AddReview([FromBody] AddReviewRequestDto body)
 	{
-		var (email, phoneNumber) = _userService.GetCredentials();
+		var (email, phoneNumber) = this._userService.GetCredentials();
 		if (email == null && phoneNumber == null)
 			return BadRequest(new ResponseError("Can't read credentials from jwt"));
 
-		var user = await _userManager.FindByCredentialsAsync(email, phoneNumber);
+		var user = await this._userManager.FindByCredentialsAsync(email, phoneNumber);
 		if (user == null)
 			return BadRequest(new ResponseError("There is no use with these credentials"));
 
@@ -59,12 +59,12 @@ public class ReviewController : Controller
 		if (customer == null)
 			return BadRequest(new ResponseError("There is no customer associated with this user"));
 
-		var trainer = await _trainerRepository.GetByIdAsync(body.TrainerId);
+		var trainer = await this._trainerRepository.GetByIdAsync(body.TrainerId);
 		if (trainer == null)
 			return BadRequest(new ResponseError("There is no trainer with this id"));
 
 		var addingResult =
-			await _reviewRepository.AddReviewAsync(body.ReviewText,
+			await this._reviewRepository.AddReviewAsync(body.ReviewText,
 				DateTime.Now, customer, trainer);
 
 		return addingResult != null
@@ -73,7 +73,7 @@ public class ReviewController : Controller
 				CustomerName = addingResult.Customer.FullName,
 				ReviewDate = addingResult.ReviewDate,
 				ReviewText = addingResult.ReviewText,
-				AvatarUrl = _fileUploadService.GetAvatarUrl(Request, addingResult.Customer.AvatarFileName)
+				AvatarUrl = this._fileUploadService.GetAvatarUrl(Request, addingResult.Customer.AvatarFileName)
 			})
 			: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 	}
