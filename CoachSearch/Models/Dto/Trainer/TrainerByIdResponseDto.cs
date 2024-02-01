@@ -1,8 +1,7 @@
-﻿using CoachSearch.Data.Entities;
-using CoachSearch.Models.Dto.Review;
+﻿using CoachSearch.Models.Dto.Review;
 using CoachSearch.Models.Dto.TrainerProgram;
 
-namespace CoachSearch.Models.Dto;
+namespace CoachSearch.Models.Dto.Trainer;
 
 public class TrainerByIdResponseDto
 {

@@ -6,7 +6,7 @@ public class FileUploadService: IFileUploadService
 
 	public FileUploadService(IWebHostEnvironment webHostEnvironment)
 	{
-		_webHostEnvironment = webHostEnvironment;
+		this._webHostEnvironment = webHostEnvironment;
 	}
 
 	public async Task<string> UploadFileAsync(IFormFile file)

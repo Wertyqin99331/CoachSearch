@@ -29,8 +29,8 @@ public class UserService: IUserService
 
 	public UserRole? GetUserRole()
 	{
-		if (_httpContextAccessor.HttpContext is null) return null;
-		var roleInString = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
+		if (this._httpContextAccessor.HttpContext is null) return null;
+		var roleInString = this._httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
 		if (Enum.TryParse(roleInString, true, out UserRole parseResult))
 			return parseResult;
 
@@ -41,8 +41,8 @@ public class UserService: IUserService
 	{
 		string? result = null;
 
-		if (_httpContextAccessor.HttpContext is not null)
-			result = _httpContextAccessor.HttpContext.User.FindFirstValue(claimType);
+		if (this._httpContextAccessor.HttpContext is not null)
+			result = this._httpContextAccessor.HttpContext.User.FindFirstValue(claimType);
 
 		return result == string.Empty ? null : result;
 	}

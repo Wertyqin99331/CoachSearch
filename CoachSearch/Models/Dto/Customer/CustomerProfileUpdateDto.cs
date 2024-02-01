@@ -19,6 +19,9 @@ public class CustomerProfileUpdateDto
 
 	public async Task<Data.Entities.Customer> ToCustomer(Data.Entities.Customer customer, IFileUploadService fileUploadService)
 	{
+		if (this.Avatar == null && customer.AvatarFileName != null)
+			fileUploadService.DeleteFile(customer.AvatarFileName);
+		
 		return new Data.Entities.Customer()
 		{
 			CustomerId = customer.CustomerId,
@@ -34,4 +37,6 @@ public class CustomerProfileUpdateDto
 			Reviews = customer.Reviews
 		};
 	}
+	
+	
 }

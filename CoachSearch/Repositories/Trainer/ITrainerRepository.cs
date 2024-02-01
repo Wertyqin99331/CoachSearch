@@ -1,4 +1,5 @@
 ﻿using CoachSearch.Models.Dto;
+using CoachSearch.Models.Dto.Trainer;
 using CoachSearch.Models.Dto.TrainerProgram;
 using Microsoft.AspNetCore.JsonPatch;
 
@@ -15,7 +16,7 @@ public interface ITrainerRepository
 
 	IQueryable<Data.Entities.Trainer> GetAllByQuery();
 
-	Task<bool> UpdateAsync(long trainerId, TrainerProfileRequestDto profile);
+	Task<bool> UpdateAsync(Data.Entities.Trainer trainer);
 
 	Task<bool> UpdateTrainingProgramsAsync(long trainerId, List<TrainingProgramRequestDto> trainingPrograms);
 

@@ -9,7 +9,8 @@ namespace CoachSearch.Data.Entities;
 public class Review
 {
 	public long ReviewId { get; set; }
-	
+
+
 	[MaxLength(500)] public string ReviewText { get; set; } = null!;
 
 	public DateTime ReviewDate { get; set; }
@@ -21,16 +22,15 @@ public class Review
 	[ForeignKey(nameof(TrainerId))] public virtual Trainer Trainer { get; set; } = null!;
 }
 
-public class ReviewEntityConfiguration: IEntityTypeConfiguration<Review>
+public class ReviewEntityConfiguration : IEntityTypeConfiguration<Review>
 {
 	public void Configure(EntityTypeBuilder<Review> builder)
 	{
-		
 		builder
 			.HasOne(r => r.Trainer)
 			.WithMany(t => t.Reviews)
 			.OnDelete(DeleteBehavior.Restrict);
-		
+
 		builder
 			.HasOne(r => r.Customer)
 			.WithMany(c => c.Reviews)

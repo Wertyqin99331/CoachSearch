@@ -11,7 +11,6 @@ using CoachSearch.Repositories.TrainingProgram;
 using CoachSearch.Services.FileUploadService;
 using CoachSearch.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,10 +19,10 @@ namespace CoachSearch.Controllers;
 
 [ApiController]
 [Route("api/trainer")]
-public class TrainerController: Controller
+public class TrainerController : Controller
 {
-
-	public TrainerController(ITrainerRepository trainerRepository, ITrainingProgramRepository trainingProgramRepository, IUserService userService, UserManager<ApplicationUser> userManager, IFileUploadService fileUploadService)
+	public TrainerController(ITrainerRepository trainerRepository, ITrainingProgramRepository trainingProgramRepository,
+		IUserService userService, UserManager<ApplicationUser> userManager, IFileUploadService fileUploadService)
 	{
 		this._trainerRepository = trainerRepository;
 		this._trainingProgramRepository = trainingProgramRepository;
@@ -37,30 +36,25 @@ public class TrainerController: Controller
 	private readonly IUserService _userService;
 	private readonly UserManager<ApplicationUser> _userManager;
 	private readonly IFileUploadService _fileUploadService;
-	
+
 	/// <summary>
 	/// Get all trainers info
 	/// </summary>
 	/// <param name="city">City of the trainer</param>
 	/// <returns></returns>
 	[HttpGet]
-	[ProducesResponseType(typeof(List<AllTrainerDto>),StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(List<AllTrainerDto>), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> GetTrainers()
 	{
-		var trainerQuery = _trainerRepository.GetAllByQuery();
+		var trainerQuery = this._trainerRepository.GetAllByQuery();
 
-		/*trainerQuery = trainerQuery.Where(t =>
-			t.FirstName != null && t.MiddleName != null
-			                    && t.LastName != null && t.City != null && t.Specialization != null);*/
-
-
-		var (email, phoneNumber) = _userService.GetCredentials();
+		var (email, phoneNumber) = this._userService.GetCredentials();
 		var currentUser = email == null && phoneNumber == null
 			? null
 			: await this._userManager.FindByCredentialsAsync(email, phoneNumber);
-		
-		
+
+
 		var result = await trainerQuery
 			.Select(t => new AllTrainerDto()
 			{
@@ -70,8 +64,8 @@ public class TrainerController: Controller
 				AvatarUrl = this._fileUploadService.GetAvatarUrl(this.Request, t.AvatarFileName),
 				Specialization = t.Specialization,
 				LikesCount = t.Likes.Count,
-				IsLiked = currentUser != null 
-				          && currentUser.Customer != null 
+				IsLiked = currentUser != null
+				          && currentUser.Customer != null
 				          && t.Likes.Any(l => l.CustomerId == currentUser.Customer.CustomerId)
 			})
 			.ToListAsync();
@@ -92,7 +86,7 @@ public class TrainerController: Controller
 
 		if (trainer == null)
 			return BadRequest(new ResponseError("There is no trainer with this id"));
-		
+
 		var (email, phoneNumber) = this._userService.GetCredentials();
 		var currentUser = email == null && phoneNumber == null
 			? null
@@ -121,12 +115,13 @@ public class TrainerController: Controller
 				AvatarUrl = this._fileUploadService.GetAvatarUrl(this.Request, r.Customer.AvatarFileName)
 			}).ToList(),
 			LikesCount = trainer.Likes.Count,
-			IsLiked = currentUser != null && currentUser.Customer != null && trainer.Likes.Any(l => l.CustomerId == currentUser.Customer.CustomerId)
+			IsLiked = currentUser != null && currentUser.Customer != null &&
+			          trainer.Likes.Any(l => l.CustomerId == currentUser.Customer.CustomerId)
 		};
 
 		return Ok(result);
 	}
-	
+
 	/// <summary>
 	/// Get a trainer profile
 	/// </summary>
@@ -137,7 +132,7 @@ public class TrainerController: Controller
 	[ProducesResponseType(typeof(ResponseError), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[ProducesResponseType(StatusCodes.Status403Forbidden)]
-	public async Task<IActionResult> 
+	public async Task<IActionResult>
 		GetTrainerProfile()
 	{
 		var (email, phoneNumber) = _userService.GetCredentials();
@@ -146,7 +141,7 @@ public class TrainerController: Controller
 			return BadRequest(new ResponseError("Can't read credentials from jwt"));
 
 		var user = await _userManager.FindByCredentialsAsync(email, phoneNumber);
-		
+
 		if (user is null)
 			return BadRequest("There is no user with these credentials");
 
@@ -191,50 +186,26 @@ public class TrainerController: Controller
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[ProducesResponseType(StatusCodes.Status403Forbidden)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> UpdateTrainerProfile([FromForm] TrainerProfileRequestDto body)
+	public async Task<IActionResult> UpdateTrainerProfile([FromForm] TrainerProfileUpdateDto body)
 	{
-		var (email, phoneNumber) = _userService.GetCredentials();
+		var (email, phoneNumber) = this._userService.GetCredentials();
 		if (email == null && phoneNumber == null)
 			return BadRequest(new ResponseError("Can't read credentials from jwt"));
 
-		var user = await _userManager.FindByCredentialsAsync(email, phoneNumber);
+		var user = await this._userManager.FindByCredentialsAsync(email, phoneNumber);
 		if (user == null)
 			return BadRequest(new ResponseError("There is no user with these credentials"));
 
 		var trainerInfo = user.Trainer;
 		if (trainerInfo == null)
-		{
-			var fileName = body.Avatar != null
-				? await _fileUploadService.UploadFileAsync(body.Avatar)
-				: null;
-			
-			var newTrainerInfo = new Trainer()
-			{
-				FullName = body.FullName,
-				Specialization = body.Specialization,
-				UserInfo = user,
-				VkLink = body.VkLink,
-				TelegramLink = body.TelegramLink, 
-				AvatarFileName = fileName,
-				Info = body.Info,
-				Address = body.Address
-			};
-
-			var result = await _trainerRepository.AddAsync(newTrainerInfo);
-			
-			return result
-				? NoContent()
-				: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
-		}
-		else
-		{
-			var result = await _trainerRepository.UpdateAsync(trainerInfo.TrainerId, body);
-			return result
-				? NoContent()
-				: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
-		}
+			return BadRequest(new ResponseError("There is no trainer associated with this user"));
+		
+		var result = await this._trainerRepository.UpdateAsync(await body.ToTrainer(trainerInfo, this._fileUploadService));
+		return result
+			? NoContent()
+			: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 	}
-	
+
 	/// <summary>
 	/// Update training programs to the trainer profile
 	/// </summary>
@@ -261,7 +232,8 @@ public class TrainerController: Controller
 		if (trainerInfo == null)
 			return BadRequest(new ResponseError("There is no trainer profile associated with this user"));
 
-		var updateResult = await _trainerRepository.UpdateTrainingProgramsAsync(trainerInfo.TrainerId, body.TrainingPrograms);
+		var updateResult =
+			await _trainerRepository.UpdateTrainingProgramsAsync(trainerInfo.TrainerId, body.TrainingPrograms);
 		return updateResult
 			? NoContent()
 			: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something went wrong"));
@@ -274,7 +246,7 @@ public class TrainerController: Controller
 	[HttpGet("addresses")]
 	public async Task<IActionResult> GetAllAddresses()
 	{
-		var allAddresses = await _trainerRepository.GetAllAddresses();
+		var allAddresses = await this._trainerRepository.GetAllAddresses();
 		return Ok(new AllTrainerAddressesResponseDto()
 		{
 			Addresses = allAddresses
