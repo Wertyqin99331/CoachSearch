@@ -123,16 +123,20 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-var folderPath = Path.Combine(builder.Environment.ContentRootPath, "Images");
+
+/*var folderPath = Path.Combine(builder.Environment.ContentRootPath, "Images");*/
+
+var folderPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot");
 if (!Directory.Exists(folderPath))
 	Directory.CreateDirectory(folderPath);
 
-app.UseStaticFiles(new StaticFileOptions
+/*app.UseStaticFiles(new StaticFileOptions
 {
 	FileProvider = new PhysicalFileProvider(
 		Path.Combine(builder.Environment.ContentRootPath, "Images")),
 	RequestPath = "/Images"
-});
+});*/
+app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
