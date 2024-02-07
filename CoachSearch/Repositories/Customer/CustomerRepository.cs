@@ -1,5 +1,5 @@
 ﻿using CoachSearch.Data;
-using CoachSearch.Models.Dto.Customer;
+using CoachSearch.Services.FileUploadService;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 

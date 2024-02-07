@@ -1,11 +1,8 @@
-﻿using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using CoachSearch.Data.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace CoachSearch.Services.Token;
 
@@ -28,12 +25,12 @@ public class TokenService: ITokenService
 			new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
 		};
 
-		var signInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]!));
+		var signInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["Jwt:Secret"]!));
 		var signInCredentials = new SigningCredentials(signInKey, SecurityAlgorithms.HmacSha256);
 
 		var jwt = new JwtSecurityToken(
-			issuer: _configuration["Jwt:Issuer"],
-			audience: _configuration["Jwt:Audience"],
+			issuer: this._configuration["Jwt:Issuer"],
+			audience: this._configuration["Jwt:Audience"],
 			claims: claims,
 			expires: DateTime.UtcNow.Add(TimeSpan.FromDays(1)),
 			notBefore: DateTime.Now,

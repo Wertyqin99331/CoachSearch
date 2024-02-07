@@ -71,7 +71,7 @@ public class TrainerRepository : ITrainerRepository
 
 			if (existingTrainer == null)
 				return false;
-
+			
 			this._dbContext.Trainers.Entry(existingTrainer).CurrentValues.SetValues(updatedTrainer);
 			await this._dbContext.SaveChangesAsync();
 			return true;
@@ -108,7 +108,7 @@ public class TrainerRepository : ITrainerRepository
 
 	public Task<List<string>> GetAllAddresses()
 	{
-		return _dbContext.Trainers
+		return this._dbContext.Trainers
 			.Select(t => t.Address)
 			.ToListAsync();
 	}

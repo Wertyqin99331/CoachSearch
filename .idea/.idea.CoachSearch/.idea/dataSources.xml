@@ -16,5 +16,13 @@
       <jdbc-url>Data Source=SQL6031.site4now.net;Initial Catalog=db_aa3fc0_coachsearch;User Id=db_aa3fc0_coachsearch_admin;Password=12345678i</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="coachsearch@localhost [2]" uuid="4f8df1ca-c30e-46dc-b727-fa70a1ea5ce4">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <configured-by-url>true</configured-by-url>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/coachsearch?password=postgres&amp;user=postgres</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
