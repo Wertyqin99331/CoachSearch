@@ -12,10 +12,7 @@ public sealed class ApplicationDbContext
 	{
 	}
 	
-	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options)
-	{
-		this.Database.Migrate();
-	}
+	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options) { }
 	
 	public DbSet<Customer> Customers { get; set; } = null!;
 	public DbSet<Trainer> Trainers { get; set; } = null!;

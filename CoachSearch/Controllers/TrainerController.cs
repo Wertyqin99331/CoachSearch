@@ -40,7 +40,6 @@ public class TrainerController : Controller
 	/// <summary>
 	/// Get all trainers info
 	/// </summary>
-	/// <param name="city">City of the trainer</param>
 	/// <returns></returns>
 	[HttpGet]
 	[ProducesResponseType(typeof(List<AllTrainerDto>), StatusCodes.Status200OK)]
@@ -61,7 +60,7 @@ public class TrainerController : Controller
 				TrainerId = t.TrainerId,
 				FullName = t.FullName,
 				Address = t.Address,
-				AvatarUrl = this._fileUploadService.GetAvatarUrl(this.Request, t.AvatarFileName),
+				AvatarUrl = this._fileUploadService.GetAvatarUrl(t.AvatarFileName),
 				Specialization = t.Specialization,
 				LikesCount = t.Likes.Count,
 				IsLiked = currentUser != null
@@ -101,7 +100,7 @@ public class TrainerController : Controller
 			FullName = trainer.FullName,
 			Info = trainer.Info,
 			Specialization = trainer.Specialization,
-			AvatarUrl = _fileUploadService.GetAvatarUrl(Request, trainer.AvatarFileName),
+			AvatarUrl = _fileUploadService.GetAvatarUrl(trainer.AvatarFileName),
 			TelegramLink = trainer.TelegramLink,
 			VkLink = trainer.VkLink,
 			TrainingPrograms = await _trainingProgramRepository
@@ -112,7 +111,7 @@ public class TrainerController : Controller
 				ReviewDate = r.ReviewDate,
 				ReviewText = r.ReviewText,
 				CustomerName = r.Customer.FullName,
-				AvatarUrl = this._fileUploadService.GetAvatarUrl(this.Request, r.Customer.AvatarFileName)
+				AvatarUrl = this._fileUploadService.GetAvatarUrl(r.Customer.AvatarFileName)
 			}).ToList(),
 			LikesCount = trainer.Likes.Count,
 			IsLiked = currentUser != null && currentUser.Customer != null &&
@@ -162,7 +161,7 @@ public class TrainerController : Controller
 				Address = trainerInfo.Address,
 				Info = trainerInfo.Info,
 				Specialization = trainerInfo.Specialization,
-				AvatarUrl = _fileUploadService.GetAvatarUrl(Request, trainerInfo.AvatarFileName),
+				AvatarUrl = _fileUploadService.GetAvatarUrl(trainerInfo.AvatarFileName),
 				TelegramLink = trainerInfo.TelegramLink,
 				VkLink = trainerInfo.VkLink,
 				TrainingPrograms = await _trainingProgramRepository

@@ -27,9 +27,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
 	options
-		/*
-		.UseSqlServer(builder.Configuration.GetConnectionString("Db"))
-		*/
+		// .UseSqlServer(builder.Configuration.GetConnectionString("Db"))
 		.UseNpgsql(builder.Configuration.GetConnectionString("Db"))
 		.UseLazyLoadingProxies();
 });
@@ -114,7 +112,7 @@ var app = builder.Build();
 app.UseCors(corsOptions => corsOptions
 	.AllowAnyHeader()
 	.AllowAnyMethod()
-	.SetIsOriginAllowed((host) => true)
+	.SetIsOriginAllowed(_ => true)
 	.AllowCredentials()
 );
 
@@ -123,22 +121,12 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
-/*var folderPath = Path.Combine(builder.Environment.ContentRootPath, "Images");*/
-
 var folderPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot");
 if (!Directory.Exists(folderPath))
 	Directory.CreateDirectory(folderPath);
 
-/*app.UseStaticFiles(new StaticFileOptions
-{
-	FileProvider = new PhysicalFileProvider(
-		Path.Combine(builder.Environment.ContentRootPath, "Images")),
-	RequestPath = "/Images"
-});*/
 app.UseStaticFiles();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();

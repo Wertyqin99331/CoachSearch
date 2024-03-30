@@ -74,7 +74,7 @@ public class ReviewController : Controller
 				CustomerName = addingResult.Customer.FullName,
 				ReviewDate = addingResult.ReviewDate,
 				ReviewText = addingResult.ReviewText,
-				AvatarUrl = this._fileUploadService.GetAvatarUrl(this.Request, addingResult.Customer.AvatarFileName)
+				AvatarUrl = this._fileUploadService.GetAvatarUrl(addingResult.Customer.AvatarFileName)
 			})
 			: StatusCode(StatusCodes.Status500InternalServerError, new ResponseError("Something goes wrong"));
 	}

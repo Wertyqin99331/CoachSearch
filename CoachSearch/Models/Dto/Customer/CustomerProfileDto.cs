@@ -33,7 +33,7 @@ public class CustomerProfileDto
 			Info = customer.Info,
 			TelegramLink = customer.TelegramLink,
 			VkLink = customer.VkLink,
-			AvatarUrl = fileUploadService.GetAvatarUrl(request, customer.AvatarFileName)
+			AvatarUrl = fileUploadService.GetAvatarUrl(customer.AvatarFileName)
 		};
 	}
 }

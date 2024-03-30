@@ -1,12 +1,16 @@
-﻿namespace CoachSearch.Services.FileUploadService;
+﻿using Castle.DynamicProxy.Generators;
+
+namespace CoachSearch.Services.FileUploadService;
 
 public class FileUploadService: IFileUploadService
 {
 	private readonly IWebHostEnvironment _webHostEnvironment;
+	private readonly IHttpContextAccessor _httpContextAccessor;
 
-	public FileUploadService(IWebHostEnvironment webHostEnvironment)
+	public FileUploadService(IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor)
 	{
 		this._webHostEnvironment = webHostEnvironment;
+		this._httpContextAccessor = httpContextAccessor;
 	}
 
 	public async Task<string> UploadFileAsync(IFormFile file)
@@ -20,7 +24,7 @@ public class FileUploadService: IFileUploadService
 		if (File.Exists(filePath))
 			File.Delete(filePath);
 
-		await using var fileStream = new FileStream(filePath, FileMode.Create);
+		await using var fileStream = File.Create(filePath);
 		await file.CopyToAsync(fileStream);
 		return uniqueFileName;
 	}
@@ -33,8 +37,13 @@ public class FileUploadService: IFileUploadService
 			File.Delete(filePath);
 	}
 
-	public string? GetAvatarUrl(HttpRequest request, string? fileName)
+	public string? GetAvatarUrl(string? fileName)
 	{
+		if (this._httpContextAccessor.HttpContext?.Request is null)
+			return null;
+
+		var request = this._httpContextAccessor.HttpContext.Request;
+		
 		return fileName == null
 			? null
 			: $"{request.Scheme}://{request.Host}{request.PathBase}/Avatars/{fileName}";
